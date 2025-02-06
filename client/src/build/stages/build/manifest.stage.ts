@@ -10,6 +10,7 @@ export default class ManifestStage extends BuildStage {
         let manifest = new Manifest(this.pkg.name);
 
         manifest.encrypted = this.task.encryption;
+        manifest.merge = this.task.merge;
 
         return await manifest.build(source, intermediate, destination, true);
     }

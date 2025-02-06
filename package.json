@@ -5,7 +5,7 @@
     "icon": "images/annex4.png",
     "version": "0.1.3",
     "license": "GPL",
-    "publisher": "annex4-inc",
+    "publisher": "annex4-inc",    
     "repository": {
         "type": "git",
         "url": "https://github.com/annex4-inc/vscode-control4-ext.git"
@@ -45,7 +45,8 @@
                     },
                     "encryption": {
                         "type": "boolean",
-                        "description": "True to encrypt the output"
+                        "description": "True to encrypt the output",
+                        "default": false
                     },
                     "template": {
                         "type": "boolean",
@@ -53,12 +54,18 @@
                     },
                     "development": {
                         "type": "boolean",
-                        "description": "True if the driver should allow Lua execution and dev logs"
+                        "description": "True if the driver should allow Lua execution",
+                        "default": false
+                    },
+                    "injections":{
+                        "type": "array",
+                        "description": "List of items to be added at the beginning driver.lua",
+                        "default": []
                     },
                     "merge": {
                         "type": "boolean",
-                        "description": "True if the driver should merge libraries into driver.lua"
-                    },
+                        "description": "True if the driver should merge libraries into driver.lua. Uses squish when BuildMetheod is DriverPackager"
+                    },                   
                     "deploy": {
                         "type": "object",
                         "properties": {
@@ -620,6 +627,6 @@
         "webpack-cli": "^5.1.4"
     },
     "dependencies": {
-        "semver": "^7.5.4"
+        "semver": "^7.5.4"      
     }
 }

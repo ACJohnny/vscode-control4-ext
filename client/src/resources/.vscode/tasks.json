@@ -8,7 +8,11 @@
       "label": "Debug Build",
       "group": "build",
       "encryption": false,
-      "template": false
+      "template": false,
+      "merge": false,
+      "development": true,      
+      "injections": ["DEBUGPRINT=true", "DEBUG_TIMER=true"]
+            
     },
     {
       "type": "control4",

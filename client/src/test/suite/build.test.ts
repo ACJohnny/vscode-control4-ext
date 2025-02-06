@@ -28,7 +28,8 @@ suite('Driver Build', () => {
             merge: false,
             template: false,
             encryption: false,
-            deploy: {ip: "", port: 0},
+            deploy: {ip: "", port: 0},            
+            injections: [],
             type: "control4"
         }, context);
 

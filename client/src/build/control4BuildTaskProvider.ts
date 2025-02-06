@@ -8,7 +8,8 @@ export interface Control4BuildTaskDefinition extends vscode.TaskDefinition {
   encryption: boolean;
   template: boolean;
   development: boolean;
-  merge: boolean;
+  merge: boolean;  
+  injections: string[];
   deploy: {ip: string, port: number};
 }
 
@@ -33,7 +34,7 @@ export class Control4BuildTaskProvider implements vscode.TaskProvider {
 
   public resolveTask(_task: vscode.Task): vscode.Task | undefined {
     const definition: Control4BuildTaskDefinition = <any>_task.definition;
-    return this.getTask(definition.version, definition.encryption, definition.template, definition.development, definition.merge, definition.deploy, definition);
+    return this.getTask(definition.version, definition.encryption, definition.template, definition.development, definition.injections, definition.merge, definition.deploy, definition);
   }
 
   private getTasks(): vscode.Task[] {
@@ -53,7 +54,7 @@ export class Control4BuildTaskProvider implements vscode.TaskProvider {
     return this.tasks;
   }
 
-  private getTask(version: BuildVersion, encryption: boolean, template: boolean, development: boolean, merge: boolean, deploy: {ip: string, port: number}, definition?: Control4BuildTaskDefinition): vscode.Task {
+  private getTask(version: BuildVersion, encryption: boolean, template: boolean, development: boolean, injections: string[], merge: boolean, deploy: {ip: string, port: number}, definition?: Control4BuildTaskDefinition): vscode.Task {
     if (definition === undefined) {
       definition = {
         type: Control4BuildTaskProvider.BuildType,
@@ -61,8 +62,9 @@ export class Control4BuildTaskProvider implements vscode.TaskProvider {
         encryption,
         template,
         development,
+        injections,
         merge,
-        deploy
+        deploy        
       };
     }
 

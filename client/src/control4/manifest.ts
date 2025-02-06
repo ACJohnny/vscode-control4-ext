@@ -18,6 +18,8 @@ export default class Manifest {
     driverName: string
     type: string
     encrypted: boolean
+    merge: boolean
+    
 
     constructor(driverName: string) {
         this.type = "c4z";
@@ -26,6 +28,7 @@ export default class Manifest {
         this.folders = [];
         this.contents = {};
         this.encrypted = false;
+        this.merge = false;
     }
 
     /**
@@ -80,7 +83,7 @@ export default class Manifest {
             try {
                 await fsPromises.rm(int, { recursive: true, force: true })
 
-                fse.copy(src, int, async (err, data) => {
+                fse.copy(src, int, async (err) => {
                     if (err) {
                         reject(err)
                     } else {
@@ -90,7 +93,7 @@ export default class Manifest {
                             }
                         }
 
-                        resolve(data)
+                        resolve(true)
                     }
                 })
             } catch (err) {
@@ -154,7 +157,7 @@ export default class Manifest {
         var root = builder.create("Driver").root()
         root.att("type", this.type)
             .att("name", this.driverName)
-            .att("squishLua", "false")
+            .att("squishLua", this.merge ? "true" : "false")
             .att("Encryption", this.encrypted ? "true" : "false")
 
         var items = root.ele("Items");

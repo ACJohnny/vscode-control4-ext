@@ -14,3 +14,6 @@ package-lock.json
 
 **/intermediate
 **/output
+client/tsconfig.tsbuildinfo
+client/src/test/suite/build.test.ts
+server/tsconfig.tsbuildinfo
