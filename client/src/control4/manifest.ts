@@ -158,7 +158,7 @@ export default class Manifest {
         root.att("type", this.type)
             .att("name", this.driverName)
             .att("squishLua", this.merge ? "true" : "false")
-            .att("Encryption", this.encrypted ? "true" : "false")
+            .att("encryption", this.encrypted ? "2" : "0")
 
         var items = root.ele("Items");
 
