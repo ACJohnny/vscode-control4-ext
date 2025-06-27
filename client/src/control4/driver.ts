@@ -238,6 +238,17 @@ export class Driver {
                     })
                 } else if (key == "schedule_default") {
                     nCapabilities.import((value as C4Schedule).toXml())
+                } else if (key == "navigator_display_option") {
+                    // Handle navigator_display_option from package.json capabilities
+                    if (Array.isArray(value)) {
+                        value.forEach((navOption) => {
+                            let navDisplayOption = new C4NavigatorDisplayOption(navOption);
+                            nCapabilities.import(navDisplayOption.toXml());
+                        });
+                    } else {
+                        let navDisplayOption = new C4NavigatorDisplayOption(value);
+                        nCapabilities.import(navDisplayOption.toXml());
+                    }
                 } else if (Array.isArray(value)) {
                     nCapabilities.ele(key).txt(value.join(","))
                 } else if (typeof (value) == "object") {

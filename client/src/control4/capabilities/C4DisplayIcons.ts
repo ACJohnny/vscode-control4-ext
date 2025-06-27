@@ -11,22 +11,41 @@ export class C4DisplayIcons {
     @jsonArrayMember(C4InterfaceIcon)
     defaults: C4InterfaceIcon[]
 
-    @jsonMember(C4InterfaceIcon)
+    @jsonMember(C4InterfaceIcon) 
     states?: {[key:string]: C4InterfaceIcon[]}
 
     constructor(options?) {
         if (options) {
-            this.defaults = options.defaults.map((v) => { return new C4InterfaceIcon(v)} );
+            this.defaults = options.default_icons.map((v) => { return new C4InterfaceIcon(v)} );
             this.states = {}
             
-            if (options.states) {
-                Object.entries(options.states).forEach((v: any) => {
-                    this.states[v[0]] = [];
-
-                    v[1].forEach((d: C4InterfaceIcon) => {
-                        this.states[v[0]].push(new C4InterfaceIcon(d))
+            if (options.state_icons) {
+                // Handle states as array of objects with id/icons properties (from schema)
+                if (Array.isArray(options.state_icons)) {
+                    options.state_icons.forEach((stateObj: any, index: number) => {
+                        this.states[stateObj.id] = [];
+                        
+                        if (stateObj.icons && Array.isArray(stateObj.icons)) {
+                            stateObj.icons.forEach((d: C4InterfaceIcon) => {
+                                this.states[stateObj.id].push(new C4InterfaceIcon(d))
+                            })
+                        }
                     })
-                })
+                } else {
+                    // Handle states as object with string keys (backward compatibility)
+                    Object.entries(options.states).forEach((v: any) => {
+                        this.states[v[0]] = [];
+
+                        // Check if v[1] is an object with icons property or direct array
+                        const iconsArray = v[1].icons || v[1];
+                        
+                        if (Array.isArray(iconsArray)) {
+                            iconsArray.forEach((d: C4InterfaceIcon) => {
+                                this.states[v[0]].push(new C4InterfaceIcon(d))
+                            })
+                        }
+                    })
+                }
             }
         }
     }
@@ -34,31 +53,35 @@ export class C4DisplayIcons {
     toXml() {
         let node = builder.create("display_icons").root();
 
-        this.defaults.forEach((d) => {
-            if (d.sizes) {
-                d.sizes.forEach((size) => {
-                    node.import(d.toXml(size))
-                })
-                
-            } else {
-                node.import(d.toXml())
-            }
-        })
-
-        Object.entries(this.states).forEach((state) => {
-            let s = node.ele("state", { id: state[0]});
-
-            state[1].forEach((d) => {
+        if (this.defaults) {
+            this.defaults.forEach((d) => {
                 if (d.sizes) {
                     d.sizes.forEach((size) => {
-                        s.import(d.toXml(size))
+                        node.import(d.toXml(size))
                     })
                     
                 } else {
-                    s.import(d.toXml())
+                    node.import(d.toXml())
                 }
             })
-        })
+        }
+
+        if (this.states) {
+            Object.entries(this.states).forEach((state) => {
+                let s = node.ele("state", { id: state[0]});
+
+                state[1].forEach((d) => {
+                    if (d.sizes) {
+                        d.sizes.forEach((size) => {
+                            s.import(d.toXml(size))
+                        })
+                        
+                    } else {
+                        s.import(d.toXml())
+                    }
+                })
+            })
+        }
 
         return node;
     }
@@ -70,14 +93,16 @@ export class C4DisplayIcons {
         let defaults = cleanXmlArray(value.display_icons, "Icon")
         let states = cleanXmlArray(value.display_icons, "state")
 
-        option.defaults = defaults.map((d) => {           
+        option.defaults = defaults ? defaults.map((d) => {           
             return C4InterfaceIcon.fromXml(d)
-        })
+        }) : [];
 
-        states.forEach((s) => {
-            let state = C4StateIcon.fromXml(s)
-            option.states[state.Id] = state.Icons
-        })
+        if (states) {
+            states.forEach((s) => {
+                let state = C4StateIcon.fromXml(s)
+                option.states[state.Id] = state.Icons
+            })
+        }
 
         return option
     }
@@ -86,15 +111,17 @@ export class C4DisplayIcons {
         let display_icons = new C4DisplayIcons();
             display_icons.states = {}
 
-        display_icons.defaults = default_icons.map((d) => {
+        display_icons.defaults = default_icons ? default_icons.map((d) => {
             let dpath = path.replace(/%RELPATH%/gi, d.relpath || "icons/device").replace(/%ICONFILENAME%/gi, d.id);
             return <C4InterfaceIcon>{ path: dpath, sizes: d.sizes }
-        })
+        }) : [];
 
-        state_icons.forEach((s) => {
-            let state = C4StateIcon.fromInterface(s, path)
-            display_icons.states[state.Id] = state.Icons
-        })
+        if (state_icons) {
+            state_icons.forEach((s) => {
+                let state = C4StateIcon.fromInterface(s, path)
+                display_icons.states[state.Id] = state.Icons
+            })
+        }
 
         // Explore allowing multiple single State Icon entries with same state value.
 /*         let countList: {count:number} = state_icons.reduce(function(p, c){

@@ -3,7 +3,7 @@
     "displayName": "Control4 DriverWorks Support",
     "description": "Assists in the creation of Control4 drivers",
     "icon": "images/annex4.png",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "license": "GPL",
     "publisher": "annex4-inc",    
     "repository": {

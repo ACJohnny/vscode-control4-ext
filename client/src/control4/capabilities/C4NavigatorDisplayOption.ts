@@ -55,7 +55,7 @@ export class C4NavigatorDisplayOption {
             
         } else if (options) {
             this.proxybindingid = options.proxybindingid;
-            this.display_icons = new C4DisplayIcons(options.display_icons);
+            this.display_icons = options.display_icons ? new C4DisplayIcons(options.display_icons) : undefined;
             this.translation_url = options.translation_url;
         }
     }
