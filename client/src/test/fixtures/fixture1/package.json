@@ -30,7 +30,52 @@
     "serialsettings": "9600 8 none 1 none 232",
     "control": "lua_gen",
     "controlmethod": "serial",
-    "combo": true
+    "combo": true,
+    "capabilities": {
+      "UI": [
+        {
+          "proxy": 5001,
+          "deviceIcon": "device_icon.png",
+          "brandingIcon": "branding_icon.png",
+          "icons": [
+            {
+              "id": "icon1",
+              "path": "icons/icon1.png",
+              "sizes": [70, 90, 300, 512, 1024]
+            }
+          ],
+          "screens": [
+            {
+              "id": "screen1",
+              "name": "Test Screen",
+              "list": {
+                "data_command": {
+                  "name": "GetData",
+                  "type": "data"
+                }
+              }
+            }
+          ],
+          "tabs": [
+            {
+              "id": "tab1",
+              "name": "Test Tab",
+              "screen_id": "screen1"
+            }
+          ],
+          "actions": [
+            {
+              "id": "action1",
+              "name": "Test Action",
+              "command": {
+                "name": "TestCommand",
+                "type": "command"
+              }
+            }
+          ]
+        }
+      ]
+    }
   },
   "devDependencies": {
     "@annex4/test.control4": "^1.1.4"

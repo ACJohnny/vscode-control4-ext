@@ -1,16 +1,21 @@
-
 import 'reflect-metadata';
-import { jsonMember, jsonObject } from 'typedjson';
+import { jsonMember, jsonObject, jsonArrayMember } from 'typedjson';
 import * as builder from 'xmlbuilder2';
 import C4InterfaceTrait from './C4InterfaceTrait';
 
 @jsonObject
 export default class C4InterfaceList {
     @jsonMember
-    defaultActionProperty: string
+    defaultAction: string
 
     @jsonMember
-    actionIdsProperty: string
+    itemDefaultActionProperty: string
+
+    @jsonArrayMember(String)
+    actionIds: string[]
+
+    @jsonArrayMember(String)
+    itemActionIdsProperty: string[]
 
     @jsonMember
     titleProperty: string
@@ -37,15 +42,76 @@ export default class C4InterfaceList {
     willTranslate: C4InterfaceTrait
 
     toXml() {
-        let node = builder.create("Param").root();
+        let node = builder.create("List").root();
 
-        node.ele("ItemDefaultActionProperty", this.defaultActionProperty);
-        node.ele("ItemActionIdsProperty", this.actionIdsProperty);
-        node.ele("TitleProperty", this.titleProperty);
-        node.ele("SubTitleProperty", this.subtitleProperty);
-        node.ele("ImageProperty", this.imageProperty);
-        node.ele("IconProperty", this.iconProperty);
-        node.ele("LengthProperty", this.lengthProperty);
+        if (this.defaultAction) {
+            node.ele("DefaultAction").txt(this.defaultAction);
+        }
+
+        if (this.itemDefaultActionProperty) {
+            node.ele("ItemDefaultActionProperty").txt(this.itemDefaultActionProperty);
+        }
+
+        if (this.actionIds && this.actionIds.length > 0) {
+            node.ele("ActionIds").txt(this.actionIds.join(" "));
+        }
+
+        if (this.itemActionIdsProperty && this.itemActionIdsProperty.length > 0) {
+            node.ele("ItemActionIdsProperty").txt(this.itemActionIdsProperty.join(" "));
+        }
+
+        if (this.titleProperty) {
+            node.ele("TitleProperty").txt(this.titleProperty);
+        }
+
+        if (this.subtitleProperty) {
+            node.ele("SubTitleProperty").txt(this.subtitleProperty);
+        }
+
+        if (this.imageProperty) {
+            node.ele("ImageProperty").txt(this.imageProperty);
+        }
+
+        if (this.iconProperty) {
+            node.ele("IconProperty").txt(this.iconProperty);
+        }
+
+        if (this.lengthProperty) {
+            node.ele("LengthProperty").txt(this.lengthProperty);
+        }
+
+        if (this.isLink) {
+            let isLink = node.ele("IsLink");
+            isLink.ele("Property").txt(this.isLink.property);
+            if (this.isLink.values) {
+                let validValues = isLink.ele("ValidValues");
+                this.isLink.values.forEach((value: string) => {
+                    validValues.ele("Value").txt(value);
+                });
+            }
+        }
+
+        if (this.isHeader) {
+            let isHeader = node.ele("IsHeader");
+            isHeader.ele("Property").txt(this.isHeader.property);
+            if (this.isHeader.values) {
+                let validValues = isHeader.ele("ValidValues");
+                this.isHeader.values.forEach((value: string) => {
+                    validValues.ele("Value").txt(value);
+                });
+            }
+        }
+
+        if (this.willTranslate) {
+            let willTranslate = node.ele("WillTranslate");
+            willTranslate.ele("Property").txt(this.willTranslate.property);
+            if (this.willTranslate.values) {
+                let validValues = willTranslate.ele("ValidValues");
+                this.willTranslate.values.forEach((value: string) => {
+                    validValues.ele("Value").txt(value);
+                });
+            }
+        }
 
         return node;
     }
@@ -53,8 +119,10 @@ export default class C4InterfaceList {
     static fromXml(obj): C4InterfaceList {
         let i = new C4InterfaceList()
 
-        i.defaultActionProperty = obj["ItemDefaultActionProperty"]
-        i.actionIdsProperty = obj["ItemActionIdsProperty"]
+        i.defaultAction = obj["DefaultAction"]
+        i.itemDefaultActionProperty = obj["ItemDefaultActionProperty"]
+        i.actionIds = obj["ActionIds"] ? obj["ActionIds"].split(" ") : [];
+        i.itemActionIdsProperty = obj["ItemActionIdsProperty"] ? obj["ItemActionIdsProperty"].split(" ") : [];
         i.titleProperty = obj["TitleProperty"]
         i.subtitleProperty = obj["SubTitleProperty"];
         i.imageProperty = obj["ImageProperty"];

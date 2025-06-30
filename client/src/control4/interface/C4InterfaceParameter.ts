@@ -1,4 +1,3 @@
-
 import 'reflect-metadata';
 import { jsonMember, jsonObject } from 'typedjson';
 import * as builder from 'xmlbuilder2';
@@ -17,9 +16,11 @@ export default class C4InterfaceParameter {
     toXml() {
         let node = builder.create("Param").root();
 
-        node.ele("Name", this.name);
-        node.ele("Type", this.type);
-        node.ele("Value", this.value);
+        node.ele("Name").txt(this.name);
+        node.ele("Type").txt(this.type);
+        if (this.value) {
+            node.ele("Value").txt(this.value);
+        }
 
         return node;
     }

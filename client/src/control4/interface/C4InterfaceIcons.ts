@@ -1,4 +1,3 @@
-
 import 'reflect-metadata';
 import { jsonArrayMember, jsonMember, jsonObject } from 'typedjson';
 import * as builder from 'xmlbuilder2';
@@ -19,19 +18,18 @@ export default class C4InterfaceIcons {
     icons?: C4InterfaceIcon[]
 
     toXml() {
-        let node = builder.create("Icons").root();
+        let node = builder.create("IconGroup").root();
 
-        for (const key in this) {
-            if (key == "icons") {
-                let icons = node.ele("IconGroup");
+        // Add id attribute
+        if (this.id) {
+            node.att("id", this.id);
+        }
 
-                this.icons.forEach(i => {
-                    icons.import(i.toXml())
-                });
-            } else {
-                //@ts-ignore
-                node.ele(key).txt(this[key]);
-            }
+        // Add icons if present
+        if (this.icons && this.icons.length > 0) {
+            this.icons.forEach(icon => {
+                node.import(icon.toXml());
+            });
         }
 
         return node;

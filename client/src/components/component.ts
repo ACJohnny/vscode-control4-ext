@@ -86,8 +86,11 @@ export class Component<T> {
   }  
 
   async Reload() {
+    console.log(`[COMPONENT] Reloading component for type: ${this.type.name}`);
     await this.load()
+    console.log(`[COMPONENT] Loaded data:`, this.data);
     this.values = TypedJSON.parseAsArray<T>(this.data, this.type);
+    console.log(`[COMPONENT] Parsed ${this.values.length} values:`, this.values);
     return this.values;
   }
 

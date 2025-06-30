@@ -20,7 +20,8 @@ import {
     EventsResource,
     PropertiesResource,
     ProxiesResource,
-    NavDisplayOptionsResource
+    NavDisplayOptionsResource,
+    UIResource
 } from '../components'
 
 import { TypedJSON } from 'typedjson';
@@ -149,13 +150,23 @@ export class Driver {
      * Load driver information based on the driver components
      */
     async load() {
+        console.log(`[DRIVER] Starting load process`);
         this.commands = await CommandsResource.Reload();
+        console.log(`[DRIVER] Loaded ${this.commands.length} commands`);
         this.actions = await ActionsResource.Reload();
+        console.log(`[DRIVER] Loaded ${this.actions.length} actions`);
         this.properties = await PropertiesResource.Reload();
+        console.log(`[DRIVER] Loaded ${this.properties.length} properties`);
         this.connections = await ConnectionsResource.Reload();
+        console.log(`[DRIVER] Loaded ${this.connections.length} connections`);
         this.events = await EventsResource.Reload();
+        console.log(`[DRIVER] Loaded ${this.events.length} events`);
         this.navdisplayoptions = await NavDisplayOptionsResource.Reload();
+        console.log(`[DRIVER] Loaded ${this.navdisplayoptions.length} nav display options`);
         this.proxies = await ProxiesResource.Reload();
+        console.log(`[DRIVER] Loaded ${this.proxies.length} proxies`);
+        this.UI = await UIResource.Reload();
+        console.log(`[DRIVER] Loaded ${this.UI.length} UI items:`, this.UI);
     }
 
     /**
@@ -221,24 +232,32 @@ export class Driver {
             })
         }
 
+        let nCapabilities = null;
+
         if (Object.keys(this.capabilities).length > 0) {
-            var nCapabilities = root.ele("capabilities");
+            console.log(`[DRIVER] Found ${Object.keys(this.capabilities).length} capabilities`);
+            nCapabilities = root.ele("capabilities");
             
             if (this.navdisplayoptions.length > 0) {
+                console.log(`[DRIVER] Adding ${this.navdisplayoptions.length} nav display options`);
                 let dOptions = new C4NavigatorDisplayOption(this.navdisplayoptions, this.filename, true);
                 nCapabilities.import(dOptions.toXml());
             }
 
             Object.keys(this.capabilities).forEach((key) => {
                 let value = this.capabilities[key]
+                console.log(`[DRIVER] Processing capability key: ${key}, type: ${typeof value}, isArray: ${Array.isArray(value)}`);
 
                 if (key == "web_view_url") {
+                    console.log(`[DRIVER] Processing web_view_url with ${value.length} items`);
                     value.forEach((url : C4WebviewUrl) => {
                         nCapabilities.import(url.toXml())
                     })
                 } else if (key == "schedule_default") {
+                    console.log(`[DRIVER] Processing schedule_default`);
                     nCapabilities.import((value as C4Schedule).toXml())
                 } else if (key == "navigator_display_option") {
+                    console.log(`[DRIVER] Processing navigator_display_option`);
                     // Handle navigator_display_option from package.json capabilities
                     if (Array.isArray(value)) {
                         value.forEach((navOption) => {
@@ -249,9 +268,41 @@ export class Driver {
                         let navDisplayOption = new C4NavigatorDisplayOption(value);
                         nCapabilities.import(navDisplayOption.toXml());
                     }
+                } else if (key == "UI") {
+                    console.log(`[DRIVER] Processing UI capability`);
+                    console.log(`[DRIVER] UI value:`, JSON.stringify(value, null, 2));
+                    // Handle UI from package.json capabilities
+                    if (Array.isArray(value)) {
+                        console.log(`[DRIVER] UI is array with ${value.length} items`);
+                        value.forEach((uiOption, index) => {
+                            console.log(`[DRIVER] Processing UI option ${index}:`, JSON.stringify(uiOption, null, 2));
+                            let ui = new C4UI();
+                            Object.assign(ui, uiOption);
+                            console.log(`[DRIVER] Created C4UI instance:`, ui);
+                            if (ui && typeof ui.toXml === 'function') {
+                                console.log(`[DRIVER] Calling toXml on UI instance`);
+                                nCapabilities.import(ui.toXml());
+                            } else {
+                                console.log(`[DRIVER] UI instance is invalid or missing toXml method`);
+                            }
+                        });
+                    } else {
+                        console.log(`[DRIVER] UI is single object`);
+                        let ui = new C4UI();
+                        Object.assign(ui, value);
+                        console.log(`[DRIVER] Created C4UI instance:`, ui);
+                        if (ui && typeof ui.toXml === 'function') {
+                            console.log(`[DRIVER] Calling toXml on UI instance`);
+                            nCapabilities.import(ui.toXml());
+                        } else {
+                            console.log(`[DRIVER] UI instance is invalid or missing toXml method`);
+                        }
+                    }
                 } else if (Array.isArray(value)) {
+                    console.log(`[DRIVER] Processing array capability ${key} with ${value.length} items`);
                     nCapabilities.ele(key).txt(value.join(","))
                 } else if (typeof (value) == "object") {
+                    console.log(`[DRIVER] Processing object capability ${key}`);
                     if (value.attributes) {
                         if (typeof (value.value) == "object") {
                             let node = builder.create(value.value);
@@ -269,14 +320,37 @@ export class Driver {
                     }
 
                 } else {
+                    console.log(`[DRIVER] Processing primitive capability ${key}: ${value}`);
                     nCapabilities.ele(key).txt(this.capabilities[key]);
                 }
             })
         } else if (this.navdisplayoptions.length > 0) {
-            var nCapabilities = root.ele("capabilities");
+            console.log(`[DRIVER] No capabilities but ${this.navdisplayoptions.length} nav display options found`);
+            nCapabilities = root.ele("capabilities");
             let dOptions = new C4NavigatorDisplayOption(this.navdisplayoptions, this.filename, true);
             nCapabilities.import(dOptions.toXml());
 
+        }
+
+        // Handle UI from the UI array (legacy support)
+        if (this.UI && this.UI.length > 0) {
+            console.log(`[DRIVER] Found ${this.UI.length} UI items in legacy UI array`);
+            if (!nCapabilities) {
+                console.log(`[DRIVER] Creating capabilities element for legacy UI`);
+                nCapabilities = root.ele("capabilities");
+            }
+            
+            this.UI.forEach((u: C4UI, index) => {
+                console.log(`[DRIVER] Processing legacy UI item ${index}:`, u);
+                if (u && typeof u.toXml === 'function') {
+                    console.log(`[DRIVER] Calling toXml on legacy UI item ${index}`);
+                    nCapabilities.import(u.toXml())
+                } else {
+                    console.log(`[DRIVER] Legacy UI item ${index} is invalid or missing toXml method`);
+                }
+            })
+        } else {
+            console.log(`[DRIVER] No legacy UI array found`);
         }
 
         if (this.notification_attachment_provider == true) {
@@ -442,9 +516,13 @@ export class Driver {
     static From(pkg): Promise<Driver> {
         return new Promise(async (resolve, reject) => {
             try {
+                console.log(`[DRIVER.From] Starting driver creation from package:`, pkg.name);
                 let driver = new Driver(pkg.name)
                 let icon = new DriverIcon();
                 let control4 = pkg.control4 || {};
+
+                console.log(`[DRIVER.From] Control4 data:`, control4);
+                console.log(`[DRIVER.From] Control4 capabilities:`, control4.capabilities);
 
                 // Assign the control4 properties onto our instance
                 Object.assign(driver, control4);
@@ -456,27 +534,38 @@ export class Driver {
                 driver.modified = new Date();
 
                 if (driver.states) {
+                    console.log(`[DRIVER.From] Processing ${driver.states.length} states`);
                     driver.states = driver.states.map((state) => {
                         return new C4State(state);
                     })
                 }
                 
                 if (driver.capabilities) {
+                    console.log(`[DRIVER.From] Processing capabilities:`, driver.capabilities);
                     if (driver.capabilities.web_view_url) {
+                        console.log(`[DRIVER.From] Processing web_view_url capabilities`);
                         driver.capabilities.web_view_url = driver.capabilities.web_view_url.map((url) => {
                             return new C4WebviewUrl(url)
                         })
                     }
 
                     if (driver.capabilities.schedule_default) {
+                        console.log(`[DRIVER.From] Processing schedule_default capability`);
                         driver.capabilities.schedule_default = new C4Schedule(driver.capabilities.schedule_default)
+                    }
+
+                    if (driver.capabilities.UI) {
+                        console.log(`[DRIVER.From] Found UI in capabilities:`, driver.capabilities.UI);
                     }
                 }
 
+                console.log(`[DRIVER.From] About to load driver components`);
                 await driver.load()
 
+                console.log(`[DRIVER.From] Driver creation completed`);
                 resolve(driver)
             } catch (err) {
+                console.error(`[DRIVER.From] Error creating driver:`, err);
                 reject(err)
             }
         })

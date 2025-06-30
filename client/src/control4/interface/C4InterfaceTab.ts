@@ -1,4 +1,3 @@
-
 import 'reflect-metadata';
 import { jsonMember, jsonObject } from 'typedjson';
 import * as builder from 'xmlbuilder2';
@@ -18,9 +17,10 @@ export default class C4InterfaceTab {
     toXml() {
         let node = builder.create("Tab").root();
 
-        node.ele("Name", this.name);
-        node.ele("ScreenId", this.screenId);
-        node.ele("IconId", this.iconId);
+        node.ele("Id").txt(this.screenId);
+        node.ele("Name").txt(this.name);
+        node.ele("IconId").txt(this.iconId);
+        node.ele("ScreenId").txt(this.screenId);
 
         return node;
     }

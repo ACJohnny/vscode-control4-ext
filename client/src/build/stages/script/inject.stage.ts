@@ -23,7 +23,9 @@ export default class InjectionStage extends BuildStage {
         injections.push("----End injected code----\r\n\r\n")
         if(injections.length >2){
             
-        let src = injections.concat() + srcDocument;
+        let src = 
+        
+        injections.join('\r\n') + srcDocument;
         
         await WriteFileContents(srcFile, src);
         return injections.length-2;
