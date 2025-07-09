@@ -47,6 +47,10 @@
           "type": "string",
           "description": "The default action that will be executed when an item is selected. This only references an action that is defined in the Actions section. This is the last (bottom) action that will be called if no other actions are defined and if no ItemDefaultAction is defined or provided for the selected list item."
         },
+        "defaultItemAction": {
+          "type": "string",
+          "description": "The default action that will be executed for individual list items. This references an action that is defined in the Actions section."
+        },
         "itemDefaultActionProperty": {
           "type": "string",
           "description": "Maps a data property to an action name that will override the default action. If the property does not exist on a list item then the DefaultAction is still applied if there is one."
@@ -100,6 +104,10 @@
         "defaultAction": {
           "type": "string",
           "description": "The default action that will be executed when an item is selected. This only references an action that is defined in the Actions section. This is the last (bottom) action that will be called if no other actions are defined and if no ItemDefaultAction is defined or provided for the selected list item."
+        },
+        "defaultItemAction": {
+          "type": "string",
+          "description": "The default action that will be executed for individual grid items. This references an action that is defined in the Actions section."
         },
         "itemDefaultActionProperty": {
           "type": "string",
