@@ -8,6 +8,7 @@ import { C4Action } from './C4Action'
 import { C4Command } from './C4Command'
 import { C4UI } from './C4UI'
 import { C4NavDisplayOption } from './capabilities/C4NavDisplayOption'
+import { C4InterfaceTransport } from './interface/C4InterfaceTransport'
 export {
     C4Action,
     C4Command,
@@ -18,5 +19,6 @@ export {
     C4Proxy,
     C4Parameter,
     C4UI,
-    C4NavDisplayOption
+    C4NavDisplayOption,
+    C4InterfaceTransport
 }

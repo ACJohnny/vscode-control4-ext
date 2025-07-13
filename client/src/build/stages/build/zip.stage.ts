@@ -26,9 +26,18 @@ export default class ZipStage extends BuildStage {
     }
 
     OnSuccess(result: any): String {
-        vscode.window.showInformationMessage(`"${this.pkg.name}.c4z" built at ${new Date().toLocaleTimeString()}`, { modal: false }, "Open Folder", "Ok").then(selection => {
-            if (selection === "Open Folder") {
+        vscode.window.showInformationMessage(`"${this.pkg.name}.c4z" built at ${new Date().toLocaleTimeString()}`, { modal: false }, "Open .c4z", "Open driver.xml", "Ok").then(selection => {
+            if (selection === "Open .c4z") {
               vscode.env.openExternal(vscode.Uri.file(result));
+            } else if (selection === "Open driver.xml") {
+                // Open the driver.xml file from the intermediate directory
+                const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+                if (workspaceRoot) {
+                    const intermediatePath = path.join(workspaceRoot, 'intermediate', this.task.version, 'driver.xml');
+                    vscode.workspace.openTextDocument(intermediatePath).then(doc => {
+                        vscode.window.showTextDocument(doc);
+                    });
+                }
             }
         });
 

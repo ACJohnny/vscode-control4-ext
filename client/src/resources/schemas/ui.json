@@ -601,6 +601,52 @@
           }
         }
       ]
+    },
+    "transport": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the transport control"
+        },
+        "buttonType": {
+          "type": "string",
+          "enum": [
+            "PLAY",
+            "PAUSE", 
+            "STOP",
+            "SKIP_REV",
+            "SKIP_FWD",
+            "CUSTOM"
+          ],
+          "description": "The type of transport button"
+        },
+        "name": {
+          "type": "string",
+          "description": "The display name for custom button types"
+        },
+        "iconId": {
+          "type": "string",
+          "description": "The icon ID to display for the transport control"
+        },
+        "releaseCommand": {
+          "$ref": "#/definitions/command",
+          "description": "The command to execute when the transport control is released"
+        }
+      },
+      "required": ["id", "buttonType", "releaseCommand"],
+      "allOf": [{
+        "if": {
+          "properties": {
+            "buttonType": {
+              "const": "CUSTOM"
+            }
+          }
+        },
+        "then": {
+          "required": ["name", "iconId"]
+        }
+      }]
     }
   },
   "type": "array",
@@ -701,7 +747,10 @@
         }
       },
       "dashboard": {
-        "type": "array"
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/transport"
+        }
       }
     }
   }

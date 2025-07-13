@@ -35,32 +35,55 @@
       "UI": [
         {
           "proxy": 5001,
-          "deviceIcon": "device_icon.png",
-          "brandingIcon": "branding_icon.png",
-          "icons": [
+          "deviceIcon": "device",
+          "brandingIcon": "branding",
+          "tabs": [
             {
-              "id": "icon1",
-              "path": "icons/icon1.png",
-              "sizes": [70, 90, 300, 512, 1024]
+              "name": "Stations",
+              "screenId": "StationsScreen",
+              "iconId": "stationsIcon"
+            },
+            {
+              "name": "Playlists",
+              "screenId": "PlaylistsScreen",
+              "iconId": "playlistsIcon"
             }
           ],
           "screens": [
             {
-              "id": "screen1",
-              "name": "Test Screen",
+              "id": "StationsScreen",
+              "name": "Stations",
+              "type": "ListScreenType",
+              "dataCommand": {
+                "name": "GetStations",
+                "type": "PROTOCOL",
+                "params": [
+                  {
+                    "name": "screen",
+                    "type": "DEFAULT",
+                    "value": "Stations"
+                  },
+                  {
+                    "name": "station",
+                    "type": "FIRST_SELECTED"
+                  }
+                ]
+              },
               "list": {
-                "data_command": {
-                  "name": "GetData",
-                  "type": "data"
+                "defaultAction": "ListButtonAction",
+                "titleProperty": "listTitle",
+                "subtitleProperty": "listSubtitle",
+                "imageProperty": "listImage",
+                "lengthProperty": "listLength",
+                "isLink": {
+                  "property": "isLink",
+                  "values": ["true"]
+                },
+                "isHeader": {
+                  "property": "isHeader",
+                  "values": ["false"]
                 }
               }
-            }
-          ],
-          "tabs": [
-            {
-              "id": "tab1",
-              "name": "Test Tab",
-              "screen_id": "screen1"
             }
           ],
           "actions": [

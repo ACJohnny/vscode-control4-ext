@@ -10,6 +10,7 @@ import C4InterfaceIcons from '../../control4/interface/C4InterfaceIcons';
 import C4InterfaceScreen from '../../control4/interface/C4InterfaceScreen';
 import C4InterfaceTab from '../../control4/interface/C4InterfaceTab';
 import C4InterfaceCommand from '../../control4/interface/C4InterfaceCommand';
+import { C4InterfaceTransport } from '../../control4/interface/C4InterfaceTransport';
 
 export class UINodeProvider extends TreeNodeProvider<UINode> {
     private _componentPath: string
@@ -49,7 +50,13 @@ export class UINodeProvider extends TreeNodeProvider<UINode> {
                   type: "Tabs",
                   items: element.data.tabs,
                   command: element.data.tabCommand
-                }));            
+                }));
+                if (element.data.dashboard && element.data.dashboard.length > 0) {
+                  nodes.push(new FolderNode("Dashboard", "", {
+                    type: "Dashboard",
+                    items: element.data.dashboard
+                  }));
+                }
               }
 
               switch(element.data.type) {
@@ -95,6 +102,16 @@ export class UINodeProvider extends TreeNodeProvider<UINode> {
                       }
                   }
                   break;
+                case 'Dashboard':
+                  for (var i = 0; i < element.data.items.length; i++) {
+                    let e = element.data.items[i] as C4InterfaceTransport;
+
+                    nodes.push(new TextNode(e.id, `${e.buttonType} - ${e.releaseCommand.name}`, "play-circle", {
+                      type: "Transport",
+                      item: e
+                    }));
+                  }
+                  break;
               }
 
               return Promise.resolve(nodes);
@@ -108,7 +125,7 @@ export class UINodeProvider extends TreeNodeProvider<UINode> {
 
     getComponent(ui: C4UI): UINode {
         try {
-            return new UINode(ui.proxy.toString(), ui);
+            return new UINode(ui.proxybindingid?.toString() || "No proxy binding", ui);
         } catch (err) {
             console.log(err)
         }

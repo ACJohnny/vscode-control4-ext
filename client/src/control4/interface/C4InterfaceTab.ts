@@ -17,10 +17,9 @@ export default class C4InterfaceTab {
     toXml() {
         let node = builder.create("Tab").root();
 
-        node.ele("Id").txt(this.screenId);
         node.ele("Name").txt(this.name);
-        node.ele("IconId").txt(this.iconId);
         node.ele("ScreenId").txt(this.screenId);
+        node.ele("IconId").txt(this.iconId);
 
         return node;
     }

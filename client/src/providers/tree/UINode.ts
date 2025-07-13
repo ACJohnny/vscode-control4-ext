@@ -9,8 +9,8 @@ export default class UINode extends TreeNode<C4UI> {
     constructor(name: string, ui: C4UI) {
         super(name, ui, "symbol-interface", false)
 
-        this.description = ui.proxy.toString();
-        this.tooltip = ui.proxy.toString();
+        this.description = ui.proxybindingid?.toString() || "No proxy binding";
+        this.tooltip = ui.proxybindingid?.toString() || "No proxy binding";
     }
 
     getNameOfType() {

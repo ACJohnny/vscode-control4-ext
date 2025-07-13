@@ -1,0 +1,120 @@
+[
+  {
+    "$schema": "./client/src/resources/schemas/ui.json",
+    "proxybindingid": 5001,
+    "hide_in_list_nav": false,
+    "hide_in_media": true,
+    "digital_audio_support": false,
+    "can_scan_media": false,
+    "ui_selects_device": true,
+    "device_icon": "app_experience_music",
+    "branding_icon": "app_experience_music",
+    "deviceIcon": "app_experience_music",
+    "brandingIcon": "app_experience_music",
+    "tabs": [
+      {
+        "name": "Categories",
+        "screenId": "CategoriesScreen",
+        "icon_id": "categoriesIcon"
+      },
+      {
+        "name": "Genres",
+        "screenId": "GenresScreen",
+        "icon_id": "genresIcon"
+      },
+      {
+        "name": "Radio",
+        "screenId": "StationsScreen",
+        "icon_id": "StationsIcon"
+      }
+    ],
+    "screens": [
+      {
+        "id": "StationsScreen",
+        "name": "Stations",
+        "type": "ListScreenType",
+        "dataCommand": {
+          "name": "GetStations",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "StationsList"
+            }
+          ]
+        },
+        "list": {
+          "defaultAction": "StartStation",
+          "defaultItemAction": "DefaultStationsAction2",
+          "actionIds": [
+            "StartStation",
+            "StartStation2"
+          ],
+          "titleProperty": "itemTitle",
+          "subtitleProperty": "itemSubtitle",
+          "imageProperty": "itemImage",
+          "lengthProperty": "itemLength",
+          "itemDefaultActionProperty": "default_action",
+          "itemActionIdsProperty": [],
+          "isLink": {
+            "property": "isLink",
+            "values": [
+              "true"
+            ]
+          },
+          "isHeader": {
+            "property": "isHeader",
+            "values": [
+              "false"
+            ]
+          }
+        }
+      }
+    ],
+    "actions": [
+      {
+        "id": "StartStation",
+        "name": "StartStation",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "StartStation",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "StartStation"
+            },
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "dashboard": [
+      {
+        "id": "play",
+        "buttonType": "PLAY",
+        "name": "Play",
+        "iconId": "playIcon",
+        "releaseCommand": {
+          "name": "Play",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "transport",
+              "type": "DEFAULT",
+              "value": "Play"
+            }
+          ]
+        }
+      }
+    ]
+  }
+] 

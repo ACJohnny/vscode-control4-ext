@@ -9,6 +9,7 @@ import { ActionNodeProvider } from './providers/tree/ActionNodeProvider';
 import { ConnectionNodeProvider } from './providers/tree/ConnectionNodeProvider';
 import { UINodeProvider } from './providers/tree/UINodeProvider';
 import { NavDisplayOptionNodeProvider } from './providers/tree/NavDisplayOptionNodeProvider';
+import { DashboardNodeProvider } from './providers/tree/DashboardNodeProvider';
 
 
 import * as path from 'path';
@@ -23,6 +24,7 @@ import {
   PropertiesResource,
   NavDisplayOptionsResource
 } from './components'
+import { DashboardResource } from './components/DashboardResource'
 
 import './autocomplete/actions'
 import './autocomplete/properties'
@@ -63,6 +65,8 @@ export function activate(context: vscode.ExtensionContext) {
   const connectionsProvider = new ConnectionNodeProvider(workspacePath);
   const uiProvider = new UINodeProvider(workspacePath);
   const navdisplayoptionsProvider = new NavDisplayOptionNodeProvider(workspacePath);
+  const dashboardProvider = new DashboardNodeProvider(workspacePath);
+  const dashboardResource = DashboardResource.getInstance(workspacePath);
 
   // Register the disposables of the tree node providers
   Register(context, propertiesProvider.register(Views.Properties, Commands.Properties.Select, Commands.Properties.Remove));
@@ -72,6 +76,7 @@ export function activate(context: vscode.ExtensionContext) {
   Register(context, connectionsProvider.register(Views.Connections, Commands.Connections.Select, Commands.Connections.Remove));
   Register(context, uiProvider.register(Views.UI, Commands.UI.Select, Commands.UI.Remove));
   Register(context, navdisplayoptionsProvider.register(Views.NavDisplayOptions, Commands.NavDisplayOptions.Select, Commands.NavDisplayOptions.Remove));
+  Register(context, dashboardProvider.register(Views.Dashboard, Commands.Dashboard.Select, Commands.Dashboard.Remove));
   //Register(context, parametersProvider.register(Views.Parameters, Commands.Parameters.Select, Commands.Parameters.Rmeove))
 
   // Register the global commands for the extension
@@ -167,7 +172,8 @@ export function activate(context: vscode.ExtensionContext) {
     { name: "Command", plural: "Commands", resource: CommandsResource, provider: commandsProvider, panel: undefined },
     { name: "Event", plural: "Events", resource: EventsResource, provider: eventsProvider, panel: undefined},
     { name: "Connection", plural: "Connections", resource: ConnectionsResource, provider: connectionsProvider, panel: undefined },
-    { name: "NavDisplayOption", plural: "NavDisplayOptions", resource: NavDisplayOptionsResource, provider: navdisplayoptionsProvider, panel: undefined }
+    { name: "NavDisplayOption", plural: "NavDisplayOptions", resource: NavDisplayOptionsResource, provider: navdisplayoptionsProvider, panel: undefined },
+    { name: "Dashboard", plural: "Dashboard", resource: undefined, provider: dashboardProvider, panel: undefined }
 
   ]
 

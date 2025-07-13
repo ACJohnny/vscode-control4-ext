@@ -37,6 +37,9 @@ export default class C4InterfaceScreen {
     imageProperty: string
 
     @jsonMember
+    iconProperty: string
+
+    @jsonMember
     lengthProperty: string
 
     @jsonMember
@@ -60,6 +63,9 @@ export default class C4InterfaceScreen {
     @jsonMember
     grid: any
 
+    @jsonMember
+    willTranslate: C4InterfaceTrait
+
     toXml() {
         let node = builder.create("Screen").root();
 
@@ -78,14 +84,29 @@ export default class C4InterfaceScreen {
             node.import(this.dataCommand.toXml());
         }
 
-        // Add PaginationStyle if present
-        if (this.paginationStyle) {
-            node.ele("PaginationStyle").txt(this.paginationStyle);
+        // Add TitleProperty if present
+        if (this.titleProperty) {
+            node.ele("TitleProperty").txt(this.titleProperty);
         }
 
-        // Add RequiresRefresh if present
-        if (this.requiresRefresh) {
-            node.ele("RequiresRefresh").txt(this.requiresRefresh.toString());
+        // Add SubTitleProperty if present
+        if (this.subtitleProperty) {
+            node.ele("SubTitleProperty").txt(this.subtitleProperty);
+        }
+
+        // Add ImageProperty if present
+        if (this.imageProperty) {
+            node.ele("ImageProperty").txt(this.imageProperty);
+        }
+
+        // Add IconProperty if present
+        if (this.iconProperty) {
+            node.ele("IconProperty").txt(this.iconProperty);
+        }
+
+        // Add LengthProperty if present
+        if (this.lengthProperty) {
+            node.ele("LengthProperty").txt(this.lengthProperty);
         }
 
         // Add DefaultAction if present
@@ -96,6 +117,28 @@ export default class C4InterfaceScreen {
         // Add ActionIds if present
         if (this.actionIds && this.actionIds.length > 0) {
             node.ele("ActionIds").txt(this.actionIds.join(" "));
+        }
+
+        // Add WillTranslate if present
+        if (this.willTranslate) {
+            let willTranslate = node.ele("WillTranslate");
+            willTranslate.ele("Property").txt(this.willTranslate.property);
+            if (this.willTranslate.values) {
+                let validValues = willTranslate.ele("ValidValues");
+                this.willTranslate.values.forEach((value: string) => {
+                    validValues.ele("Value").txt(value);
+                });
+            }
+        }
+
+        // Add PaginationStyle if present
+        if (this.paginationStyle) {
+            node.ele("PaginationStyle").txt(this.paginationStyle);
+        }
+
+        // Add RequiresRefresh if present
+        if (this.requiresRefresh) {
+            node.ele("RequiresRefresh").txt(this.requiresRefresh.toString());
         }
 
         // Add DefaultView if present
@@ -168,9 +211,11 @@ export default class C4InterfaceScreen {
         i.titleProperty = obj["TitleProperty"];
         i.subtitleProperty = obj["SubtitleProperty"];
         i.imageProperty = obj["ImageProperty"];
+        i.iconProperty = obj["IconProperty"];
         i.lengthProperty = obj["LengthProperty"];
         i.actionIdsProperty = obj["ActionIdsProperty"];
         i.list = C4InterfaceList.fromXml(obj.List);
+        i.willTranslate = obj.WillTranslate ? C4InterfaceTrait.fromXml(obj.WillTranslate) : undefined;
 
         return i
     }

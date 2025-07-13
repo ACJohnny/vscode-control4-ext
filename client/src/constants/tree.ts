@@ -6,6 +6,7 @@ export class Views {
     public static readonly Commands = "control4-commands";
     public static readonly UI = "control4-ui";
     public static readonly NavDisplayOptions = "control4-navdisplayoptions";
+    public static readonly Dashboard = "control4-dashboard";
 }
 
 export class Commands {
@@ -47,5 +48,10 @@ export class Commands {
     public static NavDisplayOptions = {
         Select: "select.C4NavDisplayOption",
         Remove: "remove.C4NavDisplayOption"
+    }
+
+    public static Dashboard = {
+        Select: "select.C4InterfaceTransport",
+        Remove: "remove.C4InterfaceTransport"
     }
 }

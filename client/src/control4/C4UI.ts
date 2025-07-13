@@ -6,13 +6,14 @@ import C4InterfaceIcons from './interface/C4InterfaceIcons';
 import C4InterfaceScreen from './interface/C4InterfaceScreen';
 import C4InterfaceTab from './interface/C4InterfaceTab';
 import C4InterfaceAction from './interface/C4InterfaceAction';
+import { C4InterfaceTransport } from './interface/C4InterfaceTransport';
 
 import { asInt } from "./utility"
 
 @jsonObject
 export class C4UI {
     @jsonMember
-    proxy: number
+    proxybindingid: number
 
     @jsonMember
     deviceIcon: string
@@ -59,8 +60,8 @@ export class C4UI {
     @jsonArrayMember(String)
     notifications: string[]
 
-    @jsonArrayMember(String)
-    dashboard: string[]
+    @jsonArrayMember(C4InterfaceTransport)
+    dashboard: C4InterfaceTransport[]
 
     constructor() {
         this.icons = [];
@@ -71,19 +72,24 @@ export class C4UI {
         this.dashboard = [];
     }
 
-    toXml() {
-        console.log(`[C4UI] Starting toXml for UI with proxy: ${this.proxy}, deviceIcon: ${this.deviceIcon}, brandingIcon: ${this.brandingIcon}`);
+    toXml(parentNode?: any) {
+        console.log(`[C4UI] Starting toXml for UI with proxybindingid: ${this.proxybindingid}, deviceIcon: ${this.deviceIcon}, brandingIcon: ${this.brandingIcon}`);
         console.log(`[C4UI] Icons count: ${this.icons ? this.icons.length : 0}`);
         console.log(`[C4UI] Screens count: ${this.screens ? this.screens.length : 0}`);
         console.log(`[C4UI] Tabs count: ${this.tabs ? this.tabs.length : 0}`);
         console.log(`[C4UI] Actions count: ${this.actions ? this.actions.length : 0}`);
         
-        let node = builder.create("UI").root();
+        let node: any;
+        if (parentNode) {
+            node = parentNode.ele("UI");
+        } else {
+            node = builder.create("UI").root();
+        }
 
         // Add proxy binding if present
-        if (this.proxy) {
-            console.log(`[C4UI] Adding proxy binding: ${this.proxy}`);
-            node.att("proxybindingid", this.proxy.toString());
+        if (this.proxybindingid) {
+            console.log(`[C4UI] Adding proxy binding: ${this.proxybindingid}`);
+            node.att("proxybindingid", this.proxybindingid.toString());
         }
 
         // Add the required namespace
@@ -297,8 +303,14 @@ export class C4UI {
         if (this.dashboard && this.dashboard.length > 0) {
             console.log(`[C4UI] Adding ${this.dashboard.length} dashboard items`);
             let dashboard = node.ele("Dashboard");
-            this.dashboard.forEach(item => {
-                dashboard.ele("DashboardItem").txt(item);
+            this.dashboard.forEach((transport, index) => {
+                console.log(`[C4UI] Processing transport ${index}:`, transport);
+                if (transport && typeof transport.toXml === 'function') {
+                    console.log(`[C4UI] Calling toXml on transport ${index}`);
+                    transport.toXml(dashboard);
+                } else {
+                    console.log(`[C4UI] Transport ${index} is invalid or missing toXml method`);
+                }
             });
         }
 
@@ -311,7 +323,7 @@ export class C4UI {
 
         ui.deviceIcon = obj.DeviceIcon;
         ui.brandingIcon = obj.BrandingIcon;
-        ui.proxy = asInt(obj["@proxybindingid"]);
+        ui.proxybindingid = asInt(obj["@proxybindingid"]);
 
         ui.icons = obj.Icons.IconGroup.map(function (i) {
             return C4InterfaceIcons.fromXml(i)
@@ -327,6 +339,12 @@ export class C4UI {
             })
         } else if (obj.Tabs && obj.Tabs.Command) {
             ui.tabCommand = C4InterfaceCommand.fromXml(obj.Tabs.Command);
+        }
+
+        if (obj.Dashboard && obj.Dashboard.Transport) {
+            ui.dashboard = obj.Dashboard.Transport.map(function (t) {
+                return C4InterfaceTransport.fromXml(t)
+            })
         }
 
         return ui

@@ -1,1 +1,156 @@
-[]
+[
+  {
+    "$schema": "./client/src/resources/schemas/ui.json",
+    "proxybindingid": 5001,
+    "hide_in_list_nav": false,
+    "hide_in_media": true,
+    "digital_audio_support": false,
+    "can_scan_media": false,
+    "ui_selects_device": true,
+    "deviceIcon": "app_experience_music",
+    "brandingIcon": "app_experience_music",
+    "tabs": [
+      {
+        "name": "Categories",
+        "screenId": "CategoriesScreen",
+        "iconId": "categoriesIcon"
+      },
+      {
+        "name": "Artists",
+        "screenId": "ArtistsScreen",
+        "iconId": "stationsIcon"
+      },
+      {
+        "name": "Radio",
+        "screenId": "StationsScreen",
+        "iconId": "StationsIcon"
+      }      
+      
+    ],
+    "screens": [
+      {
+        "id": "StationsScreen",
+        "name": "Stations",
+        "type": "ListScreenType",
+        "dataCommand": {
+          "name": "GetStations",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "Stations"
+            },
+            {
+              "name": "station",
+              "type": "FIRST_SELECTED"
+            }
+          ]
+        },
+        "list": {
+          "defaultAction": "ListButtonAction",
+          "defaultItemAction": "ListButtonItemAction",
+          "titleProperty": "listTitle",
+          "subtitleProperty": "listSubtitle",
+          "imageProperty": "listImage",
+          "lengthProperty": "listLength",
+          "isLink": {
+            "property": "isLink",            
+            "values": ["true"]
+          },
+          "isHeader": {
+            "property": "isHeader",            
+            "values": ["false"]
+          }
+          
+          }
+        
+      },
+      {
+        "id": "ArtistsScreen",
+        "name": "Artists",
+        "type": "ListScreenType",
+        "dataCommand": {
+          "name": "GetArtists",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "Artists"
+            }
+          ]
+        },
+        "list": {
+          "defaultAction": "ListButtonAction",
+          "defaultItemAction": "ListButtonItemAction",
+          "titleProperty": "listTitle",
+          "subtitleProperty": "listSubtitle",
+          "imageProperty": "listImage",
+          "lengthProperty": "listLength",
+          "isLink": {
+            "property": "isLink",            
+            "values": ["true"]
+          },
+          "isHeader": {
+            "property": "isHeader",            
+            "values": ["false"]
+          }
+          
+        }
+      },
+      {
+        "id": "CategoriesScreen",
+        "name": "Categories",
+        "type": "ListScreenType",
+        "dataCommand": {
+          "name": "GetCategories",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "Categories"
+            }
+          ]
+        },
+        "list": {
+          "defaultAction": "ListButtonAction",
+          "defaultItemAction": "ListButtonItemAction",
+          "titleProperty": "listTitle",
+          "subtitleProperty": "listSubtitle",
+          "imageProperty": "listImage",
+          "lengthProperty": "listLength",
+          "isLink": {
+            "property": "isLink",            
+            "values": ["true"]
+          },
+          "isHeader": {
+            "property": "isHeader",            
+            "values": ["false"]
+          }
+          
+          }
+        
+      }
+    ],
+    "actions": [
+      {
+        "id": "ListButtonAction",
+        "name": "ListButtonAction",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "GetStationDetails",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "Stationslistitem"
+            }
+          ]
+        }      
+      }
+    ]
+  }
+]

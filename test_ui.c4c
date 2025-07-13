@@ -1,0 +1,466 @@
+[
+  {
+    "$schema": "./client/src/resources/schemas/ui.json",
+    "proxybindingid": 5001,
+    "hide_in_list_nav": false,
+    "hide_in_media": true,
+    "digital_audio_support": false,
+    "can_scan_media": false,
+    "ui_selects_device": true,
+    "device_icon": "app_experience_music",
+    "branding_icon": "app_experience_music",
+    "deviceIcon": "app_experience_music",
+    "brandingIcon": "app_experience_music",
+    "tabs": [
+      {
+        "name": "Categories",
+        "screenId": "CategoriesScreen",
+        "icon_id": "categoriesIcon"
+      },
+      {
+        "name": "Genres",
+        "screenId": "GenresScreen",
+        "icon_id": "genresIcon"
+      },
+      {
+        "name": "Radio",
+        "screenId": "StationsScreen",
+        "icon_id": "StationsIcon"
+      }
+    ],
+    "screens": [
+      {
+        "id": "StationsScreen",
+        "name": "Stations",
+        "type": "ListScreenType",
+        "dataCommand": {
+          "name": "GetStations",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "StationsList"
+            }
+          ]
+        },
+        "list": {
+          "defaultAction": "StartStation",
+          "defaultItemAction": "DefaultStationsAction2",
+          "actionIds": [
+            "StartStation",
+            "StartStation2"
+          ],
+          "titleProperty": "itemTitle",
+          "subtitleProperty": "itemSubtitle",
+          "imageProperty": "itemImage",
+          "lengthProperty": "itemLength",
+          "itemDefaultActionProperty": "default_action",
+          "itemActionIdsProperty": [],
+          "isLink": {
+            "property": "isLink",
+            "values": [
+              "true"
+            ]
+          },
+          "isHeader": {
+            "property": "isHeader",
+            "values": [
+              "false"
+            ]
+          }
+        }
+      },
+      {
+        "id": "ArtistsScreen",
+        "name": "Artists",
+        "type": "ListScreenType",
+        "dataCommand": {
+          "name": "GetArtists",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "Artists"
+            }
+          ]
+        },
+        "list": {
+          "defaultAction": "ListButtonAction",
+          "defaultItemAction": "ListButtonItemAction",
+          "titleProperty": "listTitle",
+          "subtitleProperty": "listSubtitle",
+          "imageProperty": "listImage",
+          "lengthProperty": "listLength",
+          "isLink": {
+            "property": "isLink",
+            "values": [
+              "true"
+            ]
+          },
+          "isHeader": {
+            "property": "isHeader",
+            "values": [
+              "false"
+            ]
+          }
+        }
+      },
+      {
+        "id": "CategoriesScreen",
+        "name": "Categories",
+        "type": "ListScreenType",
+        "dataCommand": {
+          "name": "GetCategories",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "Categories"
+            }
+          ]
+        },
+        "list": {
+          "defaultAction": "SelectCategory",
+          "defaultItemAction": "DefaultItemAction",
+          "actionIds": [
+            "SelectCategory"
+          ],
+          "titleProperty": "itemTitle",
+          "subtitleProperty": "itemSubtitle",
+          "imageProperty": "itemImage",
+          "lengthProperty": "itemLength",
+          "isLink": {
+            "property": "isLink",
+            "values": [
+              "true"
+            ]
+          },
+          "isHeader": {
+            "property": "isHeader",
+            "values": [
+              "false"
+            ]
+          }
+        }
+      },
+      {
+        "id": "GenresScreen",
+        "name": "Genres",
+        "type": "ListScreenType",
+        "dataCommand": {
+          "name": "GetGenres",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "Genres"
+            }
+          ]
+        },
+        "list": {
+          "defaultAction": "DefaultListAction",
+          "defaultItemAction": "DefaultItemAction",
+          "titleProperty": "itemTitle",
+          "subtitleProperty": "itemSubtitle",
+          "imageProperty": "itemImage",
+          "lengthProperty": "itemLength",
+          "isLink": {
+            "property": "isLink",
+            "values": [
+              "true"
+            ]
+          },
+          "isHeader": {
+            "property": "isHeader",
+            "values": [
+              "false"
+            ]
+          }
+        }
+      },
+      {
+        "id": "MusicCollectionScreen",
+        "name": "Music Collection",
+        "type": "CollectionScreenType",
+        "titleProperty": "collectionTitle",
+        "subtitleProperty": "collectionSubtitle",
+        "imageProperty": "collectionImage",
+        "defaultAction": "action_1",
+        "dataCommand": {
+          "name": "GetMusicCollection",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "type",
+              "type": "FIRST_SELECTED",
+              "value": "type"
+            },
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            },
+            {
+              "name": "screen",
+              "type": "FIRST_SELECTED",
+              "value": "screen"
+            }
+          ]
+        },
+        "list": {
+          "defaultAction": "action_2",
+          "defaultItemAction": "action_1",
+          "titleProperty": "itemTitle",
+          "subtitleProperty": "itemSubtitle",
+          "imageProperty": "itemImage"
+        }
+      }
+    ],
+    "actions": [
+      {
+        "id": "DefaultStationsAction",
+        "name": "DefaultStationsAction",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "defaultStationsAction",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      {
+        "id": "SelectAlbum",
+        "name": "SelectAlbum",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "selectAlbum",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "AlbumDetail"
+            },
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            }
+          ]
+        }
+      },
+      {
+        "id": "DefaultStationsAction2",
+        "name": "DefaultStationsAction2",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "defaultStationsAction2",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      {
+        "id": "DefaultListAction",
+        "name": "DefaultListAction",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "defaultListAction",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      {
+        "id": "DefaultItemAction",
+        "name": "DefaultItemAction",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "defaultItemAction",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      {
+        "id": "ListButtonAction",
+        "name": "ListButtonAction",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "GetStationDetails",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "Stationslistitemdefault"
+            },
+            {
+              "name": "actionId",
+              "type": "DEFAULT",
+              "value": "defaultlistbuttonaction"
+            },
+            {
+              "name": "stationId",
+              "type": "DEFAULT",
+              "value": "stationId"
+            },
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            }
+          ]
+        }
+      },
+      {
+        "id": "StartStation",
+        "name": "StartStation",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "StartStation",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "StartStation"
+            },
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            }
+          ]
+        }
+      },
+      {
+        "id": "StartStation2",
+        "name": "StartStation2",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "StartStation2",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "StartStation2"
+            },
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            }
+          ]
+        }
+      },
+      {
+        "id": "action_1",
+        "name": "action_1",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "GetStationDetails",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "Stationslistitem"
+            },
+            {
+              "name": "actionId",
+              "type": "DEFAULT",
+              "value": "action_1"
+            }
+          ]
+        }
+      },
+      {
+        "id": "action_2",
+        "name": "action_2",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "GetStationDetails",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "Stationslistitem"
+            },
+            {
+              "name": "actionId",
+              "type": "DEFAULT",
+              "value": "action_2"
+            }
+          ]
+        }
+      },
+      {
+        "id": "SelectCategory",
+        "name": "SelectCategory",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "SelectCategory",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "CategoryDetail"
+            },
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            }
+          ]
+        }
+      }
+    ],
+    "dashboard": [
+      {
+        "id": "play",
+        "buttonType": "PLAY",
+        "name": "Play",
+        "iconId": "playIcon",
+        "releaseCommand": {
+          "name": "Play",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "transport",
+              "type": "DEFAULT",
+              "value": "Play"
+            }
+          ]
+        }
+      }
+    ]
+  }
+] 

@@ -340,15 +340,42 @@ export class Driver {
                 nCapabilities = root.ele("capabilities");
             }
             
-            this.UI.forEach((u: C4UI, index) => {
-                console.log(`[DRIVER] Processing legacy UI item ${index}:`, u);
+            // Merge multiple UI objects into a single one
+            if (this.UI.length === 1) {
+                console.log(`[DRIVER] Processing single UI item`);
+                const u = this.UI[0];
                 if (u && typeof u.toXml === 'function') {
-                    console.log(`[DRIVER] Calling toXml on legacy UI item ${index}`);
+                    console.log(`[DRIVER] Calling toXml on single UI item`);
                     nCapabilities.import(u.toXml())
                 } else {
-                    console.log(`[DRIVER] Legacy UI item ${index} is invalid or missing toXml method`);
+                    console.log(`[DRIVER] Single UI item is invalid or missing toXml method`);
                 }
-            })
+            } else {
+                console.log(`[DRIVER] Merging ${this.UI.length} UI items into single UI`);
+                const mergedUI = new C4UI();
+                
+                // Use the first UI as the base
+                Object.assign(mergedUI, this.UI[0]);
+                
+                // Merge dashboard items from other UI objects
+                for (let i = 1; i < this.UI.length; i++) {
+                    const ui = this.UI[i];
+                    if (ui.dashboard && ui.dashboard.length > 0) {
+                        if (!mergedUI.dashboard) {
+                            mergedUI.dashboard = [];
+                        }
+                        mergedUI.dashboard.push(...ui.dashboard);
+                        console.log(`[DRIVER] Merged ${ui.dashboard.length} dashboard items from UI ${i}`);
+                    }
+                }
+                
+                if (mergedUI && typeof mergedUI.toXml === 'function') {
+                    console.log(`[DRIVER] Calling toXml on merged UI`);
+                    nCapabilities.import(mergedUI.toXml())
+                } else {
+                    console.log(`[DRIVER] Merged UI is invalid or missing toXml method`);
+                }
+            }
         } else {
             console.log(`[DRIVER] No legacy UI array found`);
         }
