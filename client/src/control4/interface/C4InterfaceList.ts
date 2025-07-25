@@ -17,8 +17,8 @@ export default class C4InterfaceList {
     @jsonArrayMember(String)
     actionIds: string[]
 
-    @jsonArrayMember(String)
-    itemActionIdsProperty: string[]
+    @jsonMember
+    itemActionIdsProperty: string
 
     @jsonMember
     titleProperty: string
@@ -63,8 +63,8 @@ export default class C4InterfaceList {
             node.ele("ActionIds").txt(this.actionIds.join(" "));
         }
 
-        if (this.itemActionIdsProperty && this.itemActionIdsProperty.length > 0) {
-            node.ele("ItemActionIdsProperty").txt(this.itemActionIdsProperty.join(" "));
+        if (this.itemActionIdsProperty) {
+            node.ele("ItemActionIdsProperty").txt(this.itemActionIdsProperty);
         }
 
         if (this.titleProperty) {
@@ -130,7 +130,7 @@ export default class C4InterfaceList {
         i.defaultItemAction = obj["DefaultItemAction"]
         i.itemDefaultActionProperty = obj["ItemDefaultActionProperty"]
         i.actionIds = obj["ActionIds"] ? obj["ActionIds"].split(" ") : [];
-        i.itemActionIdsProperty = obj["ItemActionIdsProperty"] ? obj["ItemActionIdsProperty"].split(" ") : [];
+        i.itemActionIdsProperty = obj["ItemActionIdsProperty"];
         i.titleProperty = obj["TitleProperty"]
         i.subtitleProperty = obj["SubTitleProperty"];
         i.imageProperty = obj["ImageProperty"];

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { jsonMember, jsonObject, jsonArrayMember } from 'typedjson';
+import { jsonMember, jsonObject, jsonArrayMember, AnyT } from 'typedjson';
 import * as builder from 'xmlbuilder2';
 import C4InterfaceDataCommand from './C4InterfaceDataCommand';
 import C4InterfaceList from './C4InterfaceList';
@@ -65,6 +65,9 @@ export default class C4InterfaceScreen {
 
     @jsonMember
     willTranslate: C4InterfaceTrait
+
+    @jsonArrayMember(AnyT)
+    items: any[];
 
     toXml() {
         let node = builder.create("Screen").root();
@@ -139,6 +142,45 @@ export default class C4InterfaceScreen {
         // Add RequiresRefresh if present
         if (this.requiresRefresh) {
             node.ele("RequiresRefresh").txt(this.requiresRefresh.toString());
+        }
+
+        // Add items for SettingsScreenType
+        if (this.type === "SettingsScreenType" && this.items && this.items.length > 0) {
+            this.items.forEach(item => {
+                let itemNode = node.ele("Item");
+                
+                // Handle different item types
+                if (item.type === "HeaderTxt") {
+                    if (item.value) itemNode.ele("Label").txt(item.value);
+                } else if (item.type === "Text") {
+                    if (item.label) itemNode.ele("Label").txt(item.label);
+                    if (item.property) itemNode.ele("Text").att("propertyName", item.property);
+                } else if (item.type === "TextField") {
+                    if (item.label) itemNode.ele("Label").txt(item.label);
+                    let textField = itemNode.ele("TextField");
+                    if (item.property) textField.att("propertyName", item.property);
+                    if (item.isPassword !== undefined) textField.att("isPassword", item.isPassword.toString());
+                } else if (item.type === "Button") {
+                    let button = itemNode.ele("Button");
+                    if (item.name) button.ele("Name").txt(item.name);
+                    if (item.command) {
+                        let command = button.ele("Command");
+                        command.ele("Name").txt(item.command.name);
+                        command.ele("Type").txt(item.command.type);
+                        if (item.command.params) {
+                            let params = command.ele("Params");
+                            item.command.params.forEach((param: any) => {
+                                let paramNode = params.ele("Param");
+                                paramNode.ele("Name").txt(param.name);
+                                paramNode.ele("Type").txt(param.type);
+                                if (param.value) {
+                                    paramNode.ele("Value").txt(param.value);
+                                }
+                            });
+                        }
+                    }
+                }
+            });
         }
 
         // Add DefaultView if present

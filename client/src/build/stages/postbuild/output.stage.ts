@@ -8,6 +8,7 @@ export default class CopyToOutputStage extends BuildStage {
     constructor(task, pkg, ctx) { super("Output", task, pkg, ctx) }
 
     async Execute(_source: string, _intermediate: string, destination: string): Promise<any> {
+        console.log('[OUTPUT_STAGE] Starting Output stage');
         return new Promise(async (resolve, reject) => {
             try {
                 if (vscode.workspace.getConfiguration('control4.build').get<boolean>('exportToDriverLocation')) {
@@ -15,14 +16,17 @@ export default class CopyToOutputStage extends BuildStage {
             
                     let dst_file = path.join(root, this.pkg.name + ".c4z")
                     let src_file = path.join(destination, this.pkg.name + ".c4z")
+                    console.log(`[OUTPUT_STAGE] Copying from ${src_file} to ${dst_file}`);
     
                     await fs.promises.copyFile(src_file, dst_file);
+                    console.log('[OUTPUT_STAGE] Copy completed successfully');
 
                     return resolve(dst_file);
                 }
-
+                console.log('[OUTPUT_STAGE] exportToDriverLocation is disabled, skipping copy');
                 return resolve(false);
             } catch (err) {
+                console.error('[OUTPUT_STAGE] Error during output copy:', err);
                 reject(err);
             }
         })

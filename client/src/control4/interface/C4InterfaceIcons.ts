@@ -25,8 +25,18 @@ export default class C4InterfaceIcons {
             node.att("id", this.id);
         }
 
-        // Add icons if present
-        if (this.icons && this.icons.length > 0) {
+        // If we have sizes and template, generate icons for each size
+        if (this.sizes && this.sizes.length > 0 && this.template) {
+            this.sizes.forEach(size => {
+                let iconPath = this.template.replace(/%size%/gi, size.toString());
+                let iconNode = node.ele("Icon");
+                iconNode.att("height", size.toString());
+                iconNode.att("width", size.toString());
+                iconNode.txt(iconPath);
+            });
+        }
+        // Add icons if present (for backward compatibility)
+        else if (this.icons && this.icons.length > 0) {
             this.icons.forEach(icon => {
                 node.import(icon.toXml());
             });

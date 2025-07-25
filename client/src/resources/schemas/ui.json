@@ -63,11 +63,8 @@
           }
         },
         "itemActionIdsProperty": {
-          "type": "array",
-          "description": "The name of an items property that contains a list of actions that will override the ActionIds defined actions.",
-          "items": {
-            "type": "string"
-          }
+          "type": "string",
+          "description": "The name of an item's property that contains a list of actions that will override the ActionIds defined actions."
         },
         "titleProperty": {
           "type": "string",
@@ -121,11 +118,8 @@
           }
         },
         "itemActionIdsProperty": {
-          "type": "array",
-          "description": "The name of an items property that contains a list of actions that will override the ActionIds defined actions.",
-          "items": {
-            "type": "string"
-          }
+          "type": "string",
+          "description": "The name of an item's property that contains a list of actions that will override the ActionIds defined actions."
         },
         "titleProperty": {
           "type": "string",
@@ -647,6 +641,34 @@
           "required": ["name", "iconId"]
         }
       }]
+    },
+    "notification": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "iconId": { "type": "string" },
+        "buttons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "screenId": { "type": "string" },
+              "command": { "$ref": "#/definitions/command" }
+            },
+            "required": ["name"]
+          }
+        },
+        "cancelButton": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "command": { "$ref": "#/definitions/command" }
+          },
+          "required": ["name"]
+        }
+      },
+      "required": ["id", "iconId", "buttons"]
     }
   },
   "type": "array",
@@ -686,7 +708,8 @@
         }
       },
       "notifications": {
-        "type": "array"
+        "type": "array",
+        "items": { "$ref": "#/definitions/notification" }
       },
       "screens": {
         "type": "array",

@@ -7,6 +7,7 @@ import C4InterfaceScreen from './interface/C4InterfaceScreen';
 import C4InterfaceTab from './interface/C4InterfaceTab';
 import C4InterfaceAction from './interface/C4InterfaceAction';
 import { C4InterfaceTransport } from './interface/C4InterfaceTransport';
+import C4InterfaceNotification from './interface/C4InterfaceNotification';
 
 import { asInt } from "./utility"
 
@@ -57,8 +58,8 @@ export class C4UI {
     @jsonMember
     search: any
 
-    @jsonArrayMember(String)
-    notifications: string[]
+    @jsonArrayMember(C4InterfaceNotification)
+    notifications: C4InterfaceNotification[];
 
     @jsonArrayMember(C4InterfaceTransport)
     dashboard: C4InterfaceTransport[]
@@ -292,10 +293,11 @@ export class C4UI {
 
         // Add notifications if present
         if (this.notifications && this.notifications.length > 0) {
-            console.log(`[C4UI] Adding ${this.notifications.length} notifications`);
-            let notifications = node.ele("Notifications");
+            let notifications = node.ele("DriverNotifications");
             this.notifications.forEach(notification => {
-                notifications.ele("Notification").txt(notification);
+                if (notification && typeof notification.toXml === 'function') {
+                    notifications.import(notification.toXml());
+                }
             });
         }
 

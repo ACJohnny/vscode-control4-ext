@@ -9,17 +9,20 @@ export default class ZipStage extends BuildStage {
     constructor(task, pkg, ctx) { super("Zip", task, pkg, ctx) }
 
     async Execute(_source: string, intermediate: string, destination: string): Promise<any> {
+        console.log('[ZIP_STAGE] Starting Zip build stage');
         return new Promise(async (resolve, reject) => {
             var zip = new AdmZip();
-                zip.addLocalFolder(intermediate);
-    
+            console.log(`[ZIP_STAGE] Adding local folder to zip: ${intermediate}`);
+            zip.addLocalFolder(intermediate);
+
             try {
                 let zipPath = path.resolve(destination, `${this.pkg.name}.c4z`);
-
+                console.log(`[ZIP_STAGE] Writing zip to: ${zipPath}`);
                 await ForceWrite(zipPath, zip.toBuffer());
-
+                console.log('[ZIP_STAGE] Zip file written successfully');
                 resolve(zipPath)
             } catch (err) {
+                console.error('[ZIP_STAGE] Error during zip creation:', err);
                 reject(err);
             }
         })
