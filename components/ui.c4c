@@ -15,17 +15,29 @@
       {
         "name": "Categories",
         "screenId": "CategoriesScreen",
-        "icon_id": "categoriesIcon"
+        "iconId": "categoriesIcon",
+        "screenCommand": {
+          "name": "GetCategoriesCommand",
+          "type": "PROTOCOL"
+        }
       },
       {
         "name": "Genres",
         "screenId": "GenresScreen",
-        "icon_id": "genresIcon"
+        "iconId": "genresIcon",
+        "screenCommand": {
+          "name": "GetGenresCommand",
+          "type": "PROTOCOL"
+        }
       },
       {
         "name": "Radio",
         "screenId": "StationsScreen",
-        "icon_id": "StationsIcon"
+        "iconId": "StationsIcon",
+        "screenCommand": {
+          "name": "GetStationsCommand",
+          "type": "PROTOCOL"
+        }
       }
     ],
     "screens": [

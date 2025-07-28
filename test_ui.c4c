@@ -218,6 +218,33 @@
           "subtitleProperty": "itemSubtitle",
           "imageProperty": "itemImage"
         }
+      },
+      {
+        "id": "AlbumDetailScreen",
+        "name": "Album Detail",
+        "type": "DetailScreenType",
+        "dataCommand": {
+          "name": "GetAlbumDetail",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            }
+          ]
+        },
+        "titleProperty": "albumTitle",
+        "subtitleProperty": "albumSubtitle",
+        "imageProperty": "albumImage",
+        "attributionImage": "controller://driver/Zing/icons/tab_artists/tab_artists_50.png",
+        "yearProperty": "albumYear",
+        "ratingProperty": "albumRating",
+        "lengthProperty": "albumLength",
+        "paragraph": {
+          "headerTxt": "Description",
+          "contentProperty": "description_paragraph"
+        }
       }
     ],
     "actions": [

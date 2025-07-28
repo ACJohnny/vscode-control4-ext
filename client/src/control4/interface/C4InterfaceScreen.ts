@@ -69,6 +69,28 @@ export default class C4InterfaceScreen {
     @jsonArrayMember(AnyT)
     items: any[];
 
+    // DetailScreenType specific properties
+    @jsonMember
+    defaultActionProperty: string
+
+    @jsonMember
+    itemDefaultActionProperty: string
+
+    @jsonMember
+    itemActionIdsProperty: string
+
+    @jsonMember
+    attributionImage: string
+
+    @jsonMember
+    yearProperty: string
+
+    @jsonMember
+    ratingProperty: string
+
+    @jsonMember
+    paragraph: any
+
     toXml() {
         let node = builder.create("Screen").root();
 
@@ -144,6 +166,37 @@ export default class C4InterfaceScreen {
             node.ele("RequiresRefresh").txt(this.requiresRefresh.toString());
         }
 
+        // Add DetailScreenType specific properties
+        if (this.type === "DetailScreenType") {
+            if (this.defaultActionProperty) {
+                node.ele("DefaultActionProperty").txt(this.defaultActionProperty);
+            }
+            if (this.itemDefaultActionProperty) {
+                node.ele("ItemDefaultActionProperty").txt(this.itemDefaultActionProperty);
+            }
+            if (this.itemActionIdsProperty) {
+                node.ele("ItemActionIdsProperty").txt(this.itemActionIdsProperty);
+            }
+            if (this.attributionImage) {
+                node.ele("AttributionImage").txt(this.attributionImage);
+            }
+            if (this.yearProperty) {
+                node.ele("YearProperty").txt(this.yearProperty);
+            }
+            if (this.ratingProperty) {
+                node.ele("RatingProperty").txt(this.ratingProperty);
+            }
+            if (this.paragraph) {
+                let paragraph = node.ele("Paragraph");
+                if (this.paragraph.headerTxt) {
+                    paragraph.ele("HeaderTxt").txt(this.paragraph.headerTxt);
+                }
+                if (this.paragraph.contentProperty) {
+                    paragraph.ele("ContentProperty").txt(this.paragraph.contentProperty);
+                }
+            }
+        }
+
         // Add items for SettingsScreenType
         if (this.type === "SettingsScreenType" && this.items && this.items.length > 0) {
             this.items.forEach(item => {
@@ -151,7 +204,7 @@ export default class C4InterfaceScreen {
                 
                 // Handle different item types
                 if (item.type === "HeaderTxt") {
-                    if (item.value) itemNode.ele("Label").txt(item.value);
+                    if (item.value) itemNode.ele("HeaderTxt").txt(item.value);
                 } else if (item.type === "Text") {
                     if (item.label) itemNode.ele("Label").txt(item.label);
                     if (item.property) itemNode.ele("Text").att("propertyName", item.property);
@@ -258,6 +311,21 @@ export default class C4InterfaceScreen {
         i.actionIdsProperty = obj["ActionIdsProperty"];
         i.list = C4InterfaceList.fromXml(obj.List);
         i.willTranslate = obj.WillTranslate ? C4InterfaceTrait.fromXml(obj.WillTranslate) : undefined;
+
+        // Parse DetailScreenType specific properties
+        i.defaultActionProperty = obj["DefaultActionProperty"];
+        i.itemDefaultActionProperty = obj["ItemDefaultActionProperty"];
+        i.itemActionIdsProperty = obj["ItemActionIdsProperty"];
+        i.attributionImage = obj["AttributionImage"];
+        i.yearProperty = obj["YearProperty"];
+        i.ratingProperty = obj["RatingProperty"];
+        
+        if (obj["Paragraph"]) {
+            i.paragraph = {
+                headerTxt: obj["Paragraph"]["HeaderTxt"],
+                contentProperty: obj["Paragraph"]["ContentProperty"]
+            };
+        }
 
         return i
     }

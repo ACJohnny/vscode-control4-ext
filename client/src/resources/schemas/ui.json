@@ -525,6 +525,10 @@
         },
         "iconId": {
           "type": "string"
+        },
+        "screenCommand": {
+          "$ref": "#/definitions/command",
+          "description": "The command to execute when the tab is selected"
         }
       }
     },
@@ -551,6 +555,43 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/item"
+          }
+        },
+        "defaultActionProperty": {
+          "type": "string",
+          "description": "Property that contains the default action for detail screens"
+        },
+        "itemDefaultActionProperty": {
+          "type": "string",
+          "description": "Property that contains the default action for individual items"
+        },
+        "itemActionIdsProperty": {
+          "type": "string",
+          "description": "Property that contains the list of action IDs for items"
+        },
+        "attributionImage": {
+          "type": "string",
+          "description": "The attribution image path for detail screens"
+        },
+        "yearProperty": {
+          "type": "string",
+          "description": "Property that contains the year for detail screens"
+        },
+        "ratingProperty": {
+          "type": "string",
+          "description": "Property that contains the rating for detail screens"
+        },
+        "paragraph": {
+          "type": "object",
+          "properties": {
+            "headerTxt": {
+              "type": "string",
+              "description": "Header text for the paragraph"
+            },
+            "contentProperty": {
+              "type": "string",
+              "description": "Property that contains the paragraph content"
+            }
           }
         }
       },
