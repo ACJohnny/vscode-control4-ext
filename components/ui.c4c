@@ -84,6 +84,31 @@
         }
       }
     ],
+    "nowPlaying": {
+      "actions": [
+        "SaveStation",
+        "RemoveStation", 
+        "ThumbsUp",
+        "ThumbsUpCancel",
+        "ThumbsDown",
+        "ThumbsDownCancel"
+      ],
+      "actionIdsProperty": "actions_list",
+      "list": {
+        "itemDefaultActionProperty": "default_action",
+        "itemActionIdsProperty": "actions_list",
+        "titleProperty": "title",
+        "subtitleProperty": "subtitle",
+        "imageProperty": "image_list",
+        "lengthProperty": "duration",
+        "isHeader": {
+          "property": "isHeader",
+          "values": [
+            "true"
+          ]
+        }
+      }
+    },
     "actions": [
       {
         "id": "StartStation",

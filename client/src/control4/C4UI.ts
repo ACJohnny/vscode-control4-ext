@@ -12,6 +12,57 @@ import C4InterfaceNotification from './interface/C4InterfaceNotification';
 import { asInt } from "./utility"
 
 @jsonObject
+export class C4NowPlayingIsHeader {
+    @jsonMember
+    property: string
+
+    @jsonArrayMember(String)
+    values: string[]
+}
+
+@jsonObject
+export class C4NowPlayingList {
+    @jsonMember
+    defaultAction?: string
+
+    @jsonMember
+    defaultItemAction?: string
+
+    @jsonMember
+    itemDefaultActionProperty?: string
+
+    @jsonMember
+    itemActionIdsProperty?: string
+
+    @jsonMember
+    titleProperty?: string
+
+    @jsonMember
+    subtitleProperty?: string
+
+    @jsonMember
+    imageProperty?: string
+
+    @jsonMember
+    lengthProperty?: string
+
+    @jsonMember
+    isHeader?: C4NowPlayingIsHeader
+}
+
+@jsonObject
+export class C4NowPlaying {
+    @jsonArrayMember(String)
+    actions: string[]
+
+    @jsonMember
+    actionIdsProperty: string
+
+    @jsonMember
+    list: C4NowPlayingList
+}
+
+@jsonObject
 export class C4UI {
     @jsonMember
     proxybindingid: number
@@ -50,7 +101,7 @@ export class C4UI {
     tabCommand: C4InterfaceCommand
 
     @jsonMember
-    now_playing: any
+    nowPlaying: C4NowPlaying
 
     @jsonArrayMember(C4InterfaceAction)
     actions: C4InterfaceAction[]
@@ -158,35 +209,67 @@ export class C4UI {
         }
 
         // Add now playing if present
-        if (this.now_playing) {
+        if (this.nowPlaying) {
             console.log(`[C4UI] Adding now playing section`);
             let nowPlaying = node.ele("NowPlaying");
             
-            if (this.now_playing.action_ids) {
-                console.log(`[C4UI] Adding ${this.now_playing.action_ids.length} action IDs`);
+            if (this.nowPlaying.actions) {
+                console.log(`[C4UI] Adding ${this.nowPlaying.actions.length} actions`);
                 let actionIds = nowPlaying.ele("ActionIds");
-                this.now_playing.action_ids.forEach((actionId: string) => {
-                    actionIds.ele("ActionId").txt(actionId);
-                });
+                actionIds.txt(this.nowPlaying.actions.join(" "));
             }
 
-            if (this.now_playing.list) {
+            if (this.nowPlaying.actionIdsProperty) {
+                console.log(`[C4UI] Adding action IDs property: ${this.nowPlaying.actionIdsProperty}`);
+                nowPlaying.ele("ActionIdsProperty").txt(this.nowPlaying.actionIdsProperty);
+            }
+
+            if (this.nowPlaying.list) {
                 console.log(`[C4UI] Adding now playing list`);
                 let list = nowPlaying.ele("List");
-                Object.keys(this.now_playing.list).forEach(key => {
-                    if (key === 'is_header' && this.now_playing.list[key]) {
-                        let isHeader = list.ele("IsHeader");
-                        isHeader.ele("Property").txt(this.now_playing.list[key].property);
-                        if (this.now_playing.list[key].valid_values) {
-                            let validValues = isHeader.ele("ValidValues");
-                            this.now_playing.list[key].valid_values.forEach((value: string) => {
-                                validValues.ele("Value").txt(value);
-                            });
-                        }
-                    } else {
-                        list.ele(key.charAt(0).toUpperCase() + key.slice(1) + "Property").txt(this.now_playing.list[key]);
+                
+                if (this.nowPlaying.list.defaultAction) {
+                    list.ele("DefaultAction").txt(this.nowPlaying.list.defaultAction);
+                }
+                
+                if (this.nowPlaying.list.defaultItemAction) {
+                    list.ele("DefaultItemAction").txt(this.nowPlaying.list.defaultItemAction);
+                }
+                
+                if (this.nowPlaying.list.itemDefaultActionProperty) {
+                    list.ele("ItemDefaultActionProperty").txt(this.nowPlaying.list.itemDefaultActionProperty);
+                }
+                
+                if (this.nowPlaying.list.itemActionIdsProperty) {
+                    list.ele("ItemActionIdsProperty").txt(this.nowPlaying.list.itemActionIdsProperty);
+                }
+                
+                if (this.nowPlaying.list.titleProperty) {
+                    list.ele("TitleProperty").txt(this.nowPlaying.list.titleProperty);
+                }
+                
+                if (this.nowPlaying.list.subtitleProperty) {
+                    list.ele("SubTitleProperty").txt(this.nowPlaying.list.subtitleProperty);
+                }
+                
+                if (this.nowPlaying.list.imageProperty) {
+                    list.ele("ImageProperty").txt(this.nowPlaying.list.imageProperty);
+                }
+                
+                if (this.nowPlaying.list.lengthProperty) {
+                    list.ele("LengthProperty").txt(this.nowPlaying.list.lengthProperty);
+                }
+                
+                if (this.nowPlaying.list.isHeader) {
+                    let isHeader = list.ele("IsHeader");
+                    isHeader.ele("Property").txt(this.nowPlaying.list.isHeader.property);
+                    if (this.nowPlaying.list.isHeader.values) {
+                        let validValues = isHeader.ele("ValidValues");
+                        this.nowPlaying.list.isHeader.values.forEach((value: string) => {
+                            validValues.ele("Value").txt(value);
+                        });
                     }
-                });
+                }
             }
         }
 
