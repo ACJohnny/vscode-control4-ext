@@ -413,6 +413,10 @@
         },
         "deleteCommand": {
           "$ref": "#/definitions/command"
+        },
+        "textProperty": {
+          "type": "string",
+          "description": "The property name to use for displaying text in search history"
         }
       }
     },

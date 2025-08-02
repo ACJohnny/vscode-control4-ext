@@ -66,4 +66,34 @@ export default class C4InterfaceNotification {
         node.ele('IconId').txt(this.iconId);
         return node;
     }
+
+    static fromXml(obj: any): C4InterfaceNotification {
+        const notification = new C4InterfaceNotification();
+        
+        notification.id = obj.Id;
+        notification.iconId = obj.IconId;
+        
+        if (obj.CancelButton) {
+            notification.cancelButton = {
+                name: obj.CancelButton.Name,
+                command: obj.CancelButton.Command ? C4InterfaceCommand.fromXml(obj.CancelButton.Command) : null
+            };
+        }
+
+        if (obj.Buttons && obj.Buttons.Button) {
+            notification.buttons = Array.isArray(obj.Buttons.Button)
+                ? obj.Buttons.Button.map((b: any) => ({
+                    name: b.Name,
+                    screenId: b.ScreenId,
+                    command: b.Command ? C4InterfaceCommand.fromXml(b.Command) : null
+                }))
+                : [{
+                    name: obj.Buttons.Button.Name,
+                    screenId: obj.Buttons.Button.ScreenId,
+                    command: obj.Buttons.Button.Command ? C4InterfaceCommand.fromXml(obj.Buttons.Button.Command) : null
+                }];
+        }
+
+        return notification;
+    }
 } 

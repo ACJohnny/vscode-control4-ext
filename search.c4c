@@ -1,0 +1,53 @@
+{
+  "filters": [
+    {
+      "id": "All",
+      "name": "All",
+      "screen_id": "SearchAll"
+    },
+    {
+      "id": "Artists",
+      "name": "Artists",
+      "screen_id": "SearchAll"
+    },
+    {
+      "id": "Albums",
+      "name": "Albums",
+      "screen_id": "SearchAll"
+    },
+    {
+      "id": "Playlists",
+      "name": "Playlists",
+      "screen_id": "SearchAll"
+    },
+    {
+      "id": "Tracks",
+      "name": "Tracks",
+      "screen_id": "SearchAll"
+    },
+    {
+      "id": "Genres",
+      "name": "Genres",
+      "screen_id": "SearchAll"
+    }
+  ],
+  "history": {
+    "data_command": {
+      "name": "getData",
+      "type": "PROTOCOL",
+      "params": [
+        {
+          "name": "name",
+          "type": "DEFAULT",
+          "value": "getSearchHistory"
+        },
+        {
+          "name": "formatter",
+          "type": "DEFAULT",
+          "value": "formatSearchHistory"
+        }
+      ]
+    },
+    "text_property": "name"
+  }
+} 

@@ -7,8 +7,8 @@
     "digital_audio_support": false,
     "can_scan_media": false,
     "ui_selects_device": true,
-    "deviceIcon": "app_experience_music",
-    "brandingIcon": "app_experience_music",
+    "deviceIcon": "zing_logo",
+    "brandingIcon": "zing_logo",
     "tabs": [
       {
         "name": "Categories",
@@ -16,20 +16,27 @@
         "iconId": "categoriesIcon"
       },
       {
-        "name": "Artists",
-        "screenId": "ArtistsScreen",
-        "iconId": "stationsIcon"
+        "name": "Genres",
+        "screenId": "GenresScreen",
+        "iconId": "genresIcon"
       },
       {
         "name": "Radio",
         "screenId": "StationsScreen",
         "iconId": "StationsIcon"
-      }      
-      
-    ],
-    "screens": [
+      },
       {
-        "id": "StationsScreen",
+        "name": "Settings",
+        "screenCommand": {
+          "name": "GetSettingsScreen",
+          "type": "PROTOCOL"
+        },
+        "iconId": "settingsIcon"
+      }
+    ],
+    "screens": 
+    [
+      {        "id": "StationsScreen",
         "name": "Stations",
         "type": "ListScreenType",
         "dataCommand": {
@@ -39,35 +46,37 @@
             {
               "name": "screen",
               "type": "DEFAULT",
-              "value": "Stations"
-            },
-            {
-              "name": "station",
-              "type": "FIRST_SELECTED"
+              "value": "StationsList"
             }
           ]
         },
         "list": {
-          "defaultAction": "ListButtonAction",
-          "defaultItemAction": "ListButtonItemAction",
-          "titleProperty": "listTitle",
-          "subtitleProperty": "listSubtitle",
-          "imageProperty": "listImage",
-          "lengthProperty": "listLength",
+          "defaultAction": "StartStation",
+          "defaultItemAction": "StartStation",
+          "actionIds": [
+            "StartStation",
+            "StartStation2"
+          ],
+          "titleProperty": "itemTitle",
+          "subtitleProperty": "itemSubtitle",
+          "imageProperty": "itemImage",
+          "lengthProperty": "itemLength",
+          "itemDefaultActionProperty": "default_action",          
           "isLink": {
-            "property": "isLink",            
-            "values": ["true"]
+            "property": "isLink",
+            "values": [
+              "true"
+            ]
           },
           "isHeader": {
-            "property": "isHeader",            
-            "values": ["false"]
+            "property": "isHeader",
+            "values": [
+              "false"
+            ]
           }
-          
-          }
-        
+        }
       },
-      {
-        "id": "ArtistsScreen",
+      {        "id": "ArtistsScreen",
         "name": "Artists",
         "type": "ListScreenType",
         "dataCommand": {
@@ -89,18 +98,20 @@
           "imageProperty": "listImage",
           "lengthProperty": "listLength",
           "isLink": {
-            "property": "isLink",            
-            "values": ["true"]
+            "property": "isLink",
+            "values": [
+              "true"
+            ]
           },
           "isHeader": {
-            "property": "isHeader",            
-            "values": ["false"]
+            "property": "isHeader",
+            "values": [
+              "false"
+            ]
           }
-          
         }
       },
-      {
-        "id": "CategoriesScreen",
+      {        "id": "CategoriesScreen",
         "name": "Categories",
         "type": "ListScreenType",
         "dataCommand": {
@@ -111,30 +122,428 @@
               "name": "screen",
               "type": "DEFAULT",
               "value": "Categories"
+            },
+            {"name": "search",
+            "type": "SEARCH"
+          },
+          {"name":"search_filter",
+        "type": "SEARCH_FILTER"}
+          ]
+        },
+        "list": {
+          "defaultAction": "SelectCategory",
+          "defaultItemAction": "DefaultItemAction",
+          "actionIds": [
+            "SelectCategory"
+          ],
+          "titleProperty": "itemTitle",
+          "subtitleProperty": "itemSubtitle",
+          "imageProperty": "itemImage",
+          "lengthProperty": "itemLength",
+          "isLink": {
+            "property": "isLink",
+            "values": [
+              "true"
+            ]
+          },
+          "isHeader": {
+            "property": "isHeader",
+            "values": [
+              "false"
+            ]
+          }
+        }
+      },
+      {        "id": "GenresScreen",
+        "name": "Genres",
+        "type": "ListScreenType",
+        "dataCommand": {
+          "name": "GetGenres",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "Genres"
             }
           ]
         },
         "list": {
-          "defaultAction": "ListButtonAction",
-          "defaultItemAction": "ListButtonItemAction",
-          "titleProperty": "listTitle",
-          "subtitleProperty": "listSubtitle",
-          "imageProperty": "listImage",
-          "lengthProperty": "listLength",
+          "defaultAction": "DefaultListAction",
+          "defaultItemAction": "DefaultItemAction",
+          "titleProperty": "itemTitle",
+          "subtitleProperty": "itemSubtitle",
+          "imageProperty": "itemImage",
+          "lengthProperty": "itemLength",
           "isLink": {
-            "property": "isLink",            
-            "values": ["true"]
+            "property": "isLink",
+            "values": [
+              "true"
+            ]
           },
           "isHeader": {
-            "property": "isHeader",            
-            "values": ["false"]
+            "property": "isHeader",
+            "values": [
+              "false"
+            ]
           }
-          
+        }
+      },
+      {        "id": "MusicCollectionScreen",
+        "name": "Music Collection",
+        "type": "CollectionScreenType",
+        "titleProperty": "collectionTitle",
+        "subtitleProperty": "collectionSubtitle",
+        "imageProperty": "collectionImage",
+        "defaultAction": "action_1",
+        "dataCommand": {
+          "name": "GetMusicCollection",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "type",
+              "type": "FIRST_SELECTED",
+              "value": "type"
+            },
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            },
+            {
+              "name": "screen",
+              "type": "FIRST_SELECTED",
+              "value": "screen"
+            }
+          ]
+        },
+        "list": {
+          "defaultAction": "action_2",
+          "defaultItemAction": "action_1",
+          "titleProperty": "itemTitle",
+          "subtitleProperty": "itemSubtitle",
+          "imageProperty": "itemImage",
+          "itemDefaultActionProperty": "default_action",
+          "itemActionIdsProperty": "actions_list"
+        }
+      },
+      {
+        "id": "LoggedOutScreen",
+        "requiresRefresh": true,
+        "name": "Settings",
+        "type": "SettingsScreenType",
+        "dataCommand": {
+          "name": "GetLoggedOutSettingsScreen",
+          "type": "PROTOCOL"
+        },        
+        "items": [
+          {
+            "type": "HeaderTxt", 
+            "value": "Settings"
+          },
+          {
+            "type": "Text",                        
+            "property": "status",
+            "label": "Account Status"
+          },
+          {
+            "type": "TextField",              
+            "property": "username",
+            "label": "Username"
+          },
+          {
+            "type": "TextField",              
+            "property": "password",              
+            "label": "Password",
+            "isPassword": true
+          },
+          {
+            "type": "Button",
+            "name": "Login",            
+            "command": {              
+              "type": "PROTOCOL",
+              "name": "LogInCommand",
+              "params": [
+                {
+                  "name": "username",
+                  "type": "FIRST_SELECTED",
+                  "value": "username"
+                },
+                {
+                  "name": "password",
+                  "type": "FIRST_SELECTED",
+                  "value": "password"
+                }
+              ]
+            }             
+          },          
+          {
+            "type": "TextField",              
+            "property": "code",              
+            "label": "Code"
+          },
+          {
+            "type": "Button",
+            "name": "Login With Code",            
+            "command": {              
+              "type": "PROTOCOL",
+              "name": "LogInCommand",
+              "params": [
+                {
+                  "name": "code",
+                  "type": "FIRST_SELECTED",
+                  "value": "code"
+                }
+              ]
+            }             
           }
-        
+        ]          
+      },
+      {"id":"LoggedInScreen",
+        "name":"Logged In",
+        "type":"SettingsScreenType",
+        "dataCommand":{
+          "name":"GetLoggedInSettingsScreen",
+          "type":"PROTOCOL"
+        },
+        "items":[
+          {
+            "type":"HeaderTxt",
+            "value":"Logged In"
+          },
+          {
+            "type":"Text",
+            "property":"status",
+            "label":"Account Status"
+          },
+          {
+            "type":"Button",
+            "name":"Logout",
+            "command":{
+              "type":"PROTOCOL",
+              "name":"LogoutCommand"
+            }
+          }
+        ]
+      } ,
+      {
+        "id": "AlbumDetailScreen",
+        "name": "Album Detail",
+        "type": "DetailScreenType",
+        "dataCommand": {
+          "name": "GetAlbumDetail",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            }
+          ]
+        },
+        "titleProperty": "albumTitle",
+        "subtitleProperty": "albumSubtitle",
+        "imageProperty": "albumImage",
+        "attribtributionImage": "controller://driver/Zing/icons/tab_artists/tab_artists_50.png",        
+        "yearProperty": "albumYear",
+        "ratingProperty": "albumRating",
+        "lengthProperty": "albumLength",
+        "paragraph":{
+          "headerTxt": "Description",
+          "contentProperty": "description_paragraph"
+        }
       }
     ],
     "actions": [
+      {
+        "id": "DefaultStationsAction",
+        "name": "DefaultStationsAction",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "defaultStationsAction",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      {
+        "id": "SelectGenre",
+        "buttonType": "SELECT_GENRE",
+        "name": "Select Genre",
+        "releaseCommand": {
+          "name": "SelectGenre",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "Genres"
+            },
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            }
+          ]
+        }
+      },
+      {
+        "id": "SelectAlbum",
+        "name": "SelectAlbum",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "SelectAlbum",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "AlbumDetail"
+            },
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            }
+          ]
+        }
+      },
+      {"id": "SelectTrack",
+        "name": "SelectTrack",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "SelectTrack",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "tracks"
+            },
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            }
+          ]
+        }
+      },
+      {
+        "id": "SelectArtist",
+        "name": "SelectArtist",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "SelectArtist",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "artists"
+            },
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            }
+          ]
+        }
+      },
+      {
+        "id": "DefaultStationsAction2",
+        "name": "DefaultStationsAction2",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "defaultStationsAction2",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      {
+        "id": "DefaultListAction",
+        "name": "DefaultListAction",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "defaultListAction",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      {
+        "id": "AddToFavorites",
+        "name": "Add To Favorites",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "AddToFavorites",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            },
+            {
+              "name": "screen",
+              "type": "FIRST_SELECTED",
+              "value": "screen"
+            }
+          ]
+        }
+      },
+      {
+        "id": "PlayNow",
+        "name": "Play Now",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "PlayNow",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            },
+            {
+              "name": "screen",
+              "type": "FIRST_SELECTED",
+              "value": "screen"
+            }
+          ]
+        }
+      },
+      {
+        "id": "DefaultItemAction",
+        "name": "DefaultItemAction",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "defaultItemAction",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "5"
+            }
+          ]
+        }
+      },
       {
         "id": "ListButtonAction",
         "name": "ListButtonAction",
@@ -146,11 +555,409 @@
             {
               "name": "screen",
               "type": "DEFAULT",
-              "value": "Stationslistitem"
+              "value": "Stationslistitemdefault"
+            },
+            {
+              "name": "actionId",
+              "type": "DEFAULT",
+              "value": "defaultlistbuttonaction"
+            },
+            {
+              "name": "stationId",
+              "type": "DEFAULT",
+              "value": "stationId"
+            },
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
             }
           ]
-        }      
+        }
+      },
+      {
+        "id": "StartStation",
+        "name": "StartStation",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "StartStation",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "StartStation"
+            },
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            }
+          ]
+        }
+      },
+      {
+        "id": "StartStation2",
+        "name": "StartStation2",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "StartStation2",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "StartStation2"
+            },
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            }
+          ]
+        }
+      },
+      {
+        "id": "action_1",
+        "name": "action_1",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "GetStationDetails",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "Stationslistitem"
+            },
+            {
+              "name": "actionId",
+              "type": "DEFAULT",
+              "value": "action_1"
+            }
+          ]
+        }
+      },
+      {
+        "id": "action_2",
+        "name": "action_2",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "GetStationDetails2",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "Stationslistitem"
+            },
+            {
+              "name": "actionId",
+              "type": "DEFAULT",
+              "value": "action_2"
+            }
+          ]
+        }
+      },
+      {
+        "id": "SelectCategory",
+        "name": "SelectCategory",
+        "type": "PROTOCOL",
+        "command": {
+          "name": "SelectCategory",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "screen",
+              "type": "DEFAULT",
+              "value": "CategoryDetail"
+            },
+            {
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
+            }
+          ]
+        }
+      },
+      {
+        "id": "Play",
+        "name": "Play",
+        "type": "PROTOCOL",
+        "command": {
+          "name": "PlayAction",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "trackId",
+              "type": "FIRST_SELECTED",
+              "value": "id"
+            },
+            {"name" : "source",
+              "type": "DEFAULT",
+              "value": "queue"
+            }
+          ]
+        }
+      },
+      {
+        "id": "Pause",
+        "name": "Pause",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "Pause",
+          "type": "PROTOCOL"
+        }
+      },
+      {
+        "id": "Stop",
+        "name": "Stop",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "Stop",
+          "type": "PROTOCOL"
+        }
+      },
+      {"id": "SkipFwd",
+        "name": "Skip Fwd",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "SkipFwd",
+          "type": "PROTOCOL"
+        }   
+      },  
+      {"id":"SkipRev",
+        "name": "Skip Rev",
+        "type": "LIST_BUTTON_ACTION",
+        "command": {
+          "name": "SkipRev",
+          "type": "PROTOCOL"
+        }
       }
-    ]
+    ],
+    "dashboard": [
+      {
+        "id": "Play",
+        "buttonType": "PLAY",
+        "name": "Play",        
+        "releaseCommand": {
+          "name": "PLAY",
+          "type": "ROOM",
+          "params": [
+            {
+              "name": "transport",
+              "type": "DEFAULT",
+              "value": "Play"
+            }
+          ]
+        }
+      },
+      {
+        "id": "Pause",
+        "buttonType": "PAUSE",
+        "name": "Pause",
+        "releaseCommand": {
+          "name": "PAUSE",
+          "type": "ROOM"
+        }
+      },
+      {
+        "id": "Stop",
+        "buttonType": "STOP",
+        "name": "Stop",
+        "releaseCommand": {
+          "name": "STOP",
+          "type": "ROOM"
+        }
+      },
+      {"id": "SkipFwd",
+        "buttonType": "SKIP_FWD",
+        "name": "Skip Fwd",
+        "releaseCommand": {
+          "name": "SKIP_FWD",
+          "type": "ROOM"
+        }
+      },
+      {"id": "SkipRev",
+        "buttonType": "SKIP_REV",
+        "name": "Skip Rev",
+        "releaseCommand": {
+          "name": "SKIP_REV",
+          "type": "ROOM"
+        }
+      }
+     
+      ],
+    "nowPlaying": {
+      "actions": [
+        "Play",
+        "Pause",
+        "Stop"
+      ],
+      "actionIdsProperty": "actions_list",
+      "list": {
+        "defaultAction": "Play",
+        "defaultItemAction": "Play",
+        "itemDefaultActionProperty": "itemDefaultAction",
+        "itemActionIdsProperty": "actions_list",
+        "titleProperty": "title",
+        "subtitleProperty": "artist",
+        "imageProperty": "image",
+        "lengthProperty": "length",
+        "isHeader": {
+          "property": "isHeader",
+          "values": [
+            "true"
+          ]
+        }
+      }
+    },
+    "icons": [
+      {
+        "id": "zing_logo",
+        "sizes": [
+          25,
+          30,
+          40,
+          50,
+          60,
+          70,
+          80,
+          90,
+          100,
+          120,
+          130,
+          140,
+          300
+        ],
+        "template": "controller://driver/Zing/icons/logo/exported/icon_%size%.png"
+      },
+      {
+        "id": "playIcon",
+        "sizes": [
+          20,
+          30,
+          40,
+          50,
+          60,
+          70,
+          80,
+          90,
+          100,
+          120,
+          120,
+          130,
+          140
+        ],
+        "template": "controller://driver/Zing Music/icons/item_now/item_now_%size%.png"
+      },
+      {
+        "id": "pauseIcon",
+        "sizes": [
+          20,
+          30,
+          40,
+          50,
+          60,
+          70,
+          80,
+          90,
+          100,
+          120,
+          120,
+          130,
+          140
+        ],
+        "template": "controller://driver/Zing Music/icons/item_now/item_now_%size%.png"
+      },
+      {
+        "id": "stopIcon",
+        "sizes": [
+          20,
+          30,
+          40,
+          50,
+          60,
+          70,
+          80,
+          90,
+          100,
+          120,
+          120,
+          130,
+          140
+        ],
+        "template": "controller://driver/Zing Music/icons/item_now/item_now_%size%.png"
+      },
+      {"id": "skipFwdIcon",
+        "sizes": [
+          20,
+          30,
+          40,
+          50,
+          60,
+          70,
+          80,
+          90,
+          100,
+          120,
+          120,
+          130,
+          140
+        ],
+        "template": "controller://driver/Zing Music/icons/item_next/lis_rha_ico_skipforward_%size%.png"
+      },
+      {"id": "skipRevIcon",
+      "sizes": [
+        20,
+        30,
+        40,
+        50,
+        60,
+        70,
+        80,
+        90,
+        100,
+        120,
+        120,
+        130,
+        140
+      ],
+      "template": "controller://driver/Zing Music/icons/item_repeat/amt_repeat_%size%.png"
+      }
+    ],
+    "notifications": [
+      {
+        "id": "LoginSuccess",
+        "iconId": "zing_logo",
+        "buttons": [
+          {
+            "name": "OK",
+            "screenId": "LoggedInScreen"
+          }
+        ]
+      }
+    ],
+    "search": {
+      "filters": [
+        {
+          "id": "Categories",
+          "name": "Category-All",
+          "screenId": "CategoriesScreen"
+        }],
+        "history": [
+          {
+            "dataCommand":{
+            "name":"GetSearchHistory",
+            "type":"PROTOCOL"
+          },"deleteCommand":{
+            "name":"DeleteSearchHistory",
+            "type":"PROTOCOL"
+          }
+        }        
+      ]
+    }
+ 
   }
+  
 ]

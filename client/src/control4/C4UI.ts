@@ -8,6 +8,7 @@ import C4InterfaceTab from './interface/C4InterfaceTab';
 import C4InterfaceAction from './interface/C4InterfaceAction';
 import { C4InterfaceTransport } from './interface/C4InterfaceTransport';
 import C4InterfaceNotification from './interface/C4InterfaceNotification';
+import C4InterfaceSearch from './interface/C4InterfaceSearch';
 
 import { asInt } from "./utility"
 
@@ -107,7 +108,7 @@ export class C4UI {
     actions: C4InterfaceAction[]
 
     @jsonMember
-    search: any
+    search: C4InterfaceSearch
 
     @jsonArrayMember(C4InterfaceNotification)
     notifications: C4InterfaceNotification[];
@@ -343,34 +344,37 @@ export class C4UI {
             if (this.search.filters) {
                 let filters = search.ele("Filters");
                 this.search.filters.forEach((filter: any) => {
-                    let filterNode = filters.ele("Filter");
+                    let filterNode = filters.ele("SearchFilter");
                     filterNode.ele("Id").txt(filter.id);
                     filterNode.ele("Name").txt(filter.name);
-                    filterNode.ele("ScreenId").txt(filter.screen_id);
+                    filterNode.ele("ScreenId").txt(filter.screenId);
                 });
             }
 
-            if (this.search.history) {
+            if (this.search.history && this.search.history.length > 0) {
                 let history = search.ele("History");
-                this.search.history.forEach((entry: any) => {
-                    let entryNode = history.ele("HistoryEntry");
-                    if (entry.data_command && typeof entry.data_command.toXml === 'function') {
-                        entryNode.import(entry.data_command.toXml());
-                    } else if (entry.data_command) {
-                        let dataCommand = C4InterfaceCommand.fromXml(entry.data_command);
-                        if (dataCommand && typeof dataCommand.toXml === 'function') {
-                            entryNode.import(dataCommand.toXml());
-                        }
+                // Take the first history entry for the DataCommand and TextProperty
+                const entry = this.search.history[0];
+                if (entry.dataCommand) {
+                    let dataCommand = history.ele("DataCommand");
+                    dataCommand.ele("Name").txt(entry.dataCommand.name);
+                    dataCommand.ele("Type").txt(entry.dataCommand.type);
+                    if (entry.dataCommand.params) {
+                        let params = dataCommand.ele("Params");
+                        entry.dataCommand.params.forEach((param: any) => {
+                            let paramNode = params.ele("Param");
+                            paramNode.ele("Name").txt(param.name);
+                            paramNode.ele("Type").txt(param.type);
+                            if (param.value) {
+                                paramNode.ele("Value").txt(param.value);
+                            }
+                        });
                     }
-                    if (entry.delete_command && typeof entry.delete_command.toXml === 'function') {
-                        entryNode.import(entry.delete_command.toXml());
-                    } else if (entry.delete_command) {
-                        let deleteCommand = C4InterfaceCommand.fromXml(entry.delete_command);
-                        if (deleteCommand && typeof deleteCommand.toXml === 'function') {
-                            entryNode.import(deleteCommand.toXml());
-                        }
-                    }
-                });
+                }
+                
+                if (entry.textProperty) {
+                    history.ele("TextProperty").txt(entry.textProperty);
+                }
             }
         }
 
@@ -430,6 +434,22 @@ export class C4UI {
             ui.dashboard = obj.Dashboard.Transport.map(function (t) {
                 return C4InterfaceTransport.fromXml(t)
             })
+        }
+
+        if (obj.Search) {
+            ui.search = C4InterfaceSearch.fromXml ? C4InterfaceSearch.fromXml(obj.Search) : obj.Search;
+        }
+
+        if (obj.Actions && obj.Actions.Action) {
+            ui.actions = obj.Actions.Action.map(function (a) {
+                return C4InterfaceAction.fromXml ? C4InterfaceAction.fromXml(a) : a;
+            });
+        }
+
+        if (obj.DriverNotifications && obj.DriverNotifications.Notification) {
+            ui.notifications = obj.DriverNotifications.Notification.map(function (n) {
+                return C4InterfaceNotification.fromXml ? C4InterfaceNotification.fromXml(n) : n;
+            });
         }
 
         return ui

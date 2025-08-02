@@ -92,4 +92,37 @@ export default class C4InterfaceAction {
 
         return node;
     }
+
+    static fromXml(obj: any): C4InterfaceAction {
+        const action = new C4InterfaceAction();
+        
+        action.id = obj.Id;
+        action.name = obj.Name;
+        action.icon_id = obj.IconId;
+        action.edit_property = obj.EditProperty;
+        
+        if (obj.Command) {
+            action.command = C4InterfaceCommand.fromXml(obj.Command);
+        }
+
+        if (obj.Filters && obj.Filters.Filter) {
+            action.filters = Array.isArray(obj.Filters.Filter)
+                ? obj.Filters.Filter.map((f: any) => ({
+                    type: f.Type,
+                    property: f.Property,
+                    name: f.Name,
+                    icon_id: f.IconId,
+                    valid_values: f.ValidValues ? f.ValidValues.Value : []
+                }))
+                : [{
+                    type: obj.Filters.Filter.Type,
+                    property: obj.Filters.Filter.Property,
+                    name: obj.Filters.Filter.Name,
+                    icon_id: obj.Filters.Filter.IconId,
+                    valid_values: obj.Filters.Filter.ValidValues ? obj.Filters.Filter.ValidValues.Value : []
+                }];
+        }
+
+        return action;
+    }
 } 

@@ -11,6 +11,28 @@
     "branding_icon": "app_experience_music",
     "deviceIcon": "app_experience_music",
     "brandingIcon": "app_experience_music",
+    "icons": [
+      {
+        "id": "app_experience_music",
+        "icons": [
+          {
+            "width": 32,
+            "height": 32,
+            "path": "controller://driver/DRIVER_FILE_NAME/icons/app_experience_music_32.png"
+          },
+          {
+            "width": 64,
+            "height": 64,
+            "path": "controller://driver/DRIVER_FILE_NAME/icons/app_experience_music_64.png"
+          }
+        ]
+      },
+      {
+        "id": "categoriesIcon",
+        "sizes": [32, 64],
+        "template": "controller://driver/DRIVER_FILE_NAME/icons/categories_%size%.png"
+      }
+    ],
     "tabs": [
       {
         "name": "Categories",
@@ -84,6 +106,102 @@
         }
       }
     ],
+    "search": {
+      "filters": [
+        {
+          "id": "Categories",
+          "name": "Category-All",
+          "screenId": "SearchAll"
+        },
+        {
+          "id": "Artists",
+          "name": "Artists",
+          "screenId": "SearchAll"
+        },
+        {
+          "id": "Albums",
+          "name": "Albums",
+          "screenId": "SearchAll"
+        },
+        {
+          "id": "Playlists",
+          "name": "Playlists",
+          "screenId": "SearchAll"
+        },
+        {
+          "id": "Tracks",
+          "name": "Tracks",
+          "screenId": "SearchAll"
+        },
+        {
+          "id": "Genres",
+          "name": "Genres",
+          "screenId": "SearchAll"
+        }
+      ],
+      "history": [
+        {
+          "dataCommand": {
+            "name": "getData",
+            "type": "PROTOCOL",
+            "params": [
+              {
+                "name": "name",
+                "type": "DEFAULT",
+                "value": "getSearchHistory"
+              },
+              {
+                "name": "formatter",
+                "type": "DEFAULT",
+                "value": "formatSearchHistory"
+              }
+            ]
+          },
+          "deleteCommand": {
+            "name": "deleteSearchHistory",
+            "type": "PROTOCOL",
+            "params": [
+              {
+                "name": "id",
+                "type": "FIRST_SELECTED",
+                "value": "history_id"
+              }
+            ]
+          },
+          "textProperty": "name"
+        }
+      ]
+    },
+    "notifications": [
+      {
+        "id": "connection_lost",
+        "iconId": "warning_icon",
+        "buttons": [
+          {
+            "name": "Retry",
+            "command": {
+              "name": "RetryConnection",
+              "type": "PROTOCOL"
+            }
+          },
+          {
+            "name": "Settings",
+            "screenId": "SettingsScreen",
+            "command": {
+              "name": "OpenSettings",
+              "type": "PROTOCOL"
+            }
+          }
+        ],
+        "cancelButton": {
+          "name": "Dismiss",
+          "command": {
+            "name": "DismissNotification",
+            "type": "PROTOCOL"
+          }
+        }
+      }
+    ],
     "nowPlaying": {
       "actions": [
         "SaveStation",
@@ -130,10 +248,32 @@
             }
           ]
         }
+      },
+      {
+        "id": "SaveStation",
+        "name": "Save Station",
+        "icon_id": "save_icon",
+        "command": {
+          "name": "SaveStation",
+          "type": "PROTOCOL",
+          "params": [
+            {
+              "name": "station_id",
+              "type": "FIRST_SELECTED",
+              "value": "id"
+            }
+          ]
+        },
+        "filters": [
+          {
+            "type": "Change",
+            "property": "is_saved",
+            "name": "Remove Station",
+            "icon_id": "remove_icon"
+          }
+        ]
       }
-    ]
-  },
-  {
+    ],
     "dashboard": [
       {
         "id": "play",
@@ -150,6 +290,22 @@
               "value": "Play"
             }
           ]
+        }
+      },
+      {
+        "id": "pause",
+        "buttonType": "PAUSE",
+        "releaseCommand": {
+          "name": "Pause",
+          "type": "PROTOCOL"
+        }
+      },
+      {
+        "id": "next",
+        "buttonType": "SKIP_FWD",
+        "releaseCommand": {
+          "name": "Next",
+          "type": "PROTOCOL"
         }
       }
     ]
