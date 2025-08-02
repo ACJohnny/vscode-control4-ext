@@ -3,7 +3,7 @@
     "displayName": "Control4 DriverWorks Support",
     "description": "Assists in the creation of Control4 drivers",
     "icon": "images/annex4.png",
-    "version": "0.1.7",
+    "version": "0.1.9",
     "license": "GPL",
     "publisher": "annex4-inc",    
     "repository": {
@@ -246,6 +246,18 @@
                 "enablement": "view == control4-navdisplayoptions"
             },
             {
+                "command": "control4.refreshDashboard",
+                "title": "Refresh Dashboard",
+                "icon": "$(extensions-refresh)",
+                "enablement": "view == control4-dashboard"
+            },
+            {
+                "command": "control4.refreshUI",
+                "title": "Refresh UI",
+                "icon": "$(extensions-refresh)",
+                "enablement": "view == control4-ui"
+            },
+            {
                 "command": "control4.addNavDisplayOption",
                 "title": "Add Nav Disp Option",
                 "icon": "$(add)",
@@ -292,6 +304,11 @@
                 "command": "remove.C4NavDisplayOption",
                 "title": "Remove Nav Disp Option",
                 "enablement": "view == control4-navdisplayoptions"
+            },
+            {
+                "command": "remove.C4InterfaceTransport",
+                "title": "Remove Dashboard Item",
+                "enablement": "view == control4-dashboard"
             }
         ],
         "menus": {
@@ -348,6 +365,16 @@
                 {
                     "command": "control4.refreshNavDisplayOptions",
                     "when": "view == control4-navdisplayoptions",
+                    "group": "navigation"
+                },
+                {
+                    "command": "control4.refreshDashboard",
+                    "when": "view == control4-dashboard",
+                    "group": "navigation"
+                },
+                {
+                    "command": "control4.refreshUI",
+                    "when": "view == control4-ui",
                     "group": "navigation"
                 }
             ],
@@ -425,6 +452,10 @@
                 {
                     "command": "remove.C4NavDisplayOption",
                     "when": "view == control4-navdisplayoptions  && viewItem == navdisplayoption"
+                },
+                {
+                    "command": "remove.C4InterfaceTransport",
+                    "when": "view == control4-dashboard && viewItem == dashboard"
                 },
                 {
                     "command": "control4.moveNavDisplayOptionUp",
@@ -513,6 +544,10 @@
                 {
                     "id": "control4-ui",
                     "name": "UI"
+                },
+                {
+                    "id": "control4-dashboard",
+                    "name": "Dashboard"
                 }
             ]
         },
@@ -553,6 +588,10 @@
             {
                 "view": "control4-navdisplayoptions",
                 "contents": "No Nav Display Options found.\n[Add Nav Display Option](command:control4.addNavDisplayOption)"
+            },
+            {
+                "view": "control4-dashboard",
+                "contents": "No dashboard items found."
             }
         ],
         "jsonValidation": [
