@@ -61,6 +61,10 @@ async function control4Create(rootPath: string, name: string) {
     // Write default documentation file
     await WriteIfNotExists(`${rootPath}/src/www/documentation.html`, "");
 
+    // Write Control4 type definitions
+    const control4Types = await ReadFileContents(path.join(this.extensionUri.fsPath, "client", "src", "resources", "control4.lua"));
+    await WriteIfNotExists(path.join(rootPath, "src", "control4.lua"), control4Types);
+
     // Initialize all component files
     await ActionsResource.initialize();
     await PropertiesResource.initialize();
@@ -95,6 +99,10 @@ async function control4Import(rootPath: vscode.Uri, destinationPath: string) {
   await ProxiesResource.initialize();
   await UIResource.initialize();
   await NavDisplayOptionsResource.initialize();
+
+  // Write Control4 type definitions
+  const control4Types = await ReadFileContents(path.join(this.extensionUri.fsPath, "client", "src", "resources", "control4.lua"));
+  await WriteIfNotExists(path.join(destinationPath, "src", "control4.lua"), control4Types);
 
   let c4z = rootPath;
   let zip = new AdmZip(c4z.fsPath);

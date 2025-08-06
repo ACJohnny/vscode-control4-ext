@@ -394,7 +394,8 @@
           "type": "string"
         },
         "screenId": {
-          "type": "string"
+          "type": "string",
+          "description": "Must reference a valid screen ID from the screens section"
         }
       }
     },
@@ -525,7 +526,8 @@
           "type": "string"
         },
         "screenId": {
-          "type": "string"
+          "type": "string",
+          "description": "Must reference a valid screen ID from the screens section"
         },
         "iconId": {
           "type": "string"
@@ -698,7 +700,10 @@
             "type": "object",
             "properties": {
               "name": { "type": "string" },
-              "screenId": { "type": "string" },
+              "screenId": { 
+                "type": "string",
+                "description": "Must reference a valid screen ID from the screens section"
+              },
               "command": { "$ref": "#/definitions/command" }
             },
             "required": ["name"]

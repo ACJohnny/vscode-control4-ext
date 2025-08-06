@@ -1,0 +1,60 @@
+---@meta
+---@class C4
+---@field RegistryDeleteValue fun(key: number): void
+---@field RegistryGetValue fun(key: number): any
+---@field GetVersionInfo fun(): { buildtime: string, builddate: string, version: string, buildtype: string }
+---@field InvalidateState fun(): void
+---@field Encode fun(data: string, data_encoding: 'NONE' | 'HEX' | 'BASE64'): string
+---@field FileClose fun(handle: number): void
+---@field FileDelete fun(filename: string): boolean
+---@field FileExists fun(filename: string): boolean
+---@field FileGetFreeSpace fun(): number
+---@field FileGetSize fun(handle: number): number
+---@field FileOpen fun(filename: string, mode: string): number
+---@field FileRead fun(handle: number, count: number): string
+---@field FileWrite fun(handle: number, data: string): number
+---@field NetworkConnect fun(idBinding: number, host: string, port: number): boolean
+---@field NetworkDisconnect fun(idBinding: number): void
+---@field NetworkListen fun(idBinding: number, port: number): boolean
+---@field NetworkSend fun(idBinding: number, data: string): boolean
+---@field UpdateProperty fun(propertyName: string, value: any): void
+---@field GetProperty fun(propertyName: string): any
+---@field FireEvent fun(eventName: string, params?: any): void
+---@field FireEventByID fun(eventID: number, params?: any): void
+---@field SendToProxy fun(idBinding: number, command: string, params?: any): void
+---@field GetDeviceID fun(): number
+---@field GetDeviceVariables fun(deviceID: number): any
+---@field GetDriverConfigXML fun(): string
+---@field GetRoomID fun(): number
+---@field SetRoomSelection fun(roomID: number): void
+---@field SendToNavigator fun(data: any): void
+---@field GetCapability fun(capabilityName: string): any
+---@field SetCapability fun(capabilityName: string, value: any): void
+---@field GetLocale fun(): string
+---@field GetMACAddress fun(): string
+---@field NetworkToHostLong fun(value: number): number
+---@field ParseISO8601Date fun(dateString: string): number
+---@field AsyncCall fun(func: function, ...): void
+---@field XMLToTable fun(xmlString: string): any
+---@field HTTPRequest fun(url: string, method: string, headers?: any, data?: any): void
+---@field SetTimer fun(id: number, interval: number): void
+---@field CancelTimer fun(id: number): void
+---@field Log fun(level: string, message: string): void
+---@field LogError fun(message: string): void
+---@field LogInfo fun(message: string): void
+---@field LogWarn fun(message: string): void
+---@field AllowExecute fun(allow: boolean): void
+
+---@class Hooks
+---@field OnDriverInit fun(): void
+---@field OnDriverLateInit fun(): void
+---@field OnDriverDestroyed fun(): void
+---@field OnPropertyChanged fun(strName: string): void
+---@field OnNetworkBindingChanged fun(idBinding: number, bIsBound: boolean): void
+---@field OnDriverRemovedFromProject fun(): void
+---@field OnEndDebugSession fun(): void
+---@field OnError fun(func: function): void
+---@field OnListen fun(func: function): void
+
+-- Global declarations
+C4 = C4 or {} 

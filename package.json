@@ -94,6 +94,14 @@
                 "title": "Import c4z"
             },
             {
+                "command": "control4.restartLanguageServer",
+                "title": "Restart Control4 Language Server"
+            },
+            {
+                "command": "control4.reloadExtension",
+                "title": "Reload Control4 Extension"
+            },
+            {
                 "command": "control4.viewProperty",
                 "title": "View Property",
                 "enablement": "view == control4-properties"

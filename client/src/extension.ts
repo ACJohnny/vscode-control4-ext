@@ -464,6 +464,30 @@ export function activate(context: vscode.ExtensionContext) {
       }
     }
   })
+
+  context.subscriptions.push(vscode.commands.registerCommand('control4.restartLanguageServer', async () => {
+    try {
+      // Stop the current client
+      if (client) {
+        await client.stop();
+      }
+      
+      // Start the client again
+      client.start();
+      
+      vscode.window.showInformationMessage('Control4 Language Server restarted successfully');
+    } catch (error) {
+      vscode.window.showErrorMessage('Failed to restart language server: ' + error.message);
+    }
+  }));
+
+  context.subscriptions.push(vscode.commands.registerCommand('control4.reloadExtension', async () => {
+    try {
+      await vscode.commands.executeCommand('workbench.action.reloadWindow');
+    } catch (error) {
+      vscode.window.showErrorMessage('Failed to reload extension: ' + error.message);
+    }
+  }));
 }
 
 export function deactivate() {

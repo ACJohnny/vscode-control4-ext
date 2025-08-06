@@ -11,15 +11,10 @@
     "brandingIcon": "zing_logo",
     "tabs": [
       {
-        "name": "Categories",
-        "screenId": "CategoriesScreen",
-        "iconId": "categoriesIcon"
-      },
-      {
-        "name": "Genres",
-        "screenId": "GenresScreen",
-        "iconId": "genresIcon"
-      },
+        "name": "Explore",
+        "screenId": "ExploreScreen",
+        "iconId": "exploreIcon"
+      },  
       {
         "name": "Radio",
         "screenId": "StationsScreen",
@@ -35,7 +30,50 @@
       }
     ],
     "screens": 
-    [
+    [      {        "id": "ExploreScreen",
+    "name": "Explore",
+    "type": "ListScreenType",
+    "dataCommand": {
+      "name": "GetExploreItems",
+      "type": "PROTOCOL",
+      "params": [
+        {
+          "name": "screen",
+          "type": "DEFAULT",
+          "value": "explore"
+        },
+        {
+          "name": "search",
+          "type": "SEARCH"
+      },
+      {
+        "name":"search_filter",
+        "type": "SEARCH_FILTER"}
+      ]
+    },
+    "list": {
+      "defaultAction": "GetExploreItem",
+      "defaultItemAction": "DefaultItemAction",
+      "itemDefaultActionProperty": "default_action",
+      "actionIds": [],
+      "itemActionIdsProperty": "actions_list",
+      "titleProperty": "itemTitle",    
+      "subtitleProperty": "itemSubtitle",
+      "imageProperty": "itemImage",      
+      "isLink": {
+        "property": "isLink",
+        "values": [
+          "true"
+        ]
+      },
+      "isHeader": {
+        "property": "isHeader",
+        "values": [
+          "false"
+        ]
+      }
+    }
+  },
       {        "id": "StationsScreen",
         "name": "Stations",
         "type": "ListScreenType",
@@ -91,12 +129,11 @@
           ]
         },
         "list": {
-          "defaultAction": "ListButtonAction",
-          "defaultItemAction": "ListButtonItemAction",
-          "titleProperty": "listTitle",
-          "subtitleProperty": "listSubtitle",
-          "imageProperty": "listImage",
-          "lengthProperty": "listLength",
+          "defaultAction": "SelectArtist",
+          "itemDefaultActionProperty": "default_action",
+          "titleProperty": "itemTitle",
+          "subtitleProperty": "itemSubtitle",
+          "imageProperty": "itemImage",
           "isLink": {
             "property": "isLink",
             "values": [
@@ -131,15 +168,10 @@
           ]
         },
         "list": {
-          "defaultAction": "SelectCategory",
-          "defaultItemAction": "DefaultItemAction",
-          "actionIds": [
-            "SelectCategory"
-          ],
-          "titleProperty": "itemTitle",
-          "subtitleProperty": "itemSubtitle",
-          "imageProperty": "itemImage",
-          "lengthProperty": "itemLength",
+          "defaultAction": "SelectCategory",          
+          "itemDefaultActionProperty": "default_action",          
+          "titleProperty": "itemTitle",          
+          "imageProperty": "itemImage",          
           "isLink": {
             "property": "isLink",
             "values": [
@@ -165,16 +197,22 @@
               "name": "screen",
               "type": "DEFAULT",
               "value": "Genres"
+            },
+            {
+              "name": "search",
+              "type": "SEARCH"
+            },
+            {
+              "name": "search_filter",
+              "type": "SEARCH_FILTER"
             }
           ]
         },
         "list": {
-          "defaultAction": "DefaultListAction",
-          "defaultItemAction": "DefaultItemAction",
-          "titleProperty": "itemTitle",
-          "subtitleProperty": "itemSubtitle",
-          "imageProperty": "itemImage",
-          "lengthProperty": "itemLength",
+          "defaultAction": "SelectGenre",          
+          "itemDefaultActionProperty": "default_action",          
+          "titleProperty": "itemTitle",          
+          "imageProperty": "itemImage",          
           "isLink": {
             "property": "isLink",
             "values": [
@@ -227,8 +265,7 @@
           "itemActionIdsProperty": "actions_list"
         }
       },
-      {
-        "id": "LoggedOutScreen",
+      {        "id": "LoggedOutScreen",
         "requiresRefresh": true,
         "name": "Settings",
         "type": "SettingsScreenType",
@@ -299,7 +336,7 @@
           }
         ]          
       },
-      {"id":"LoggedInScreen",
+      {        "id":"LoggedInScreen",
         "name":"Logged In",
         "type":"SettingsScreenType",
         "dataCommand":{
@@ -321,13 +358,12 @@
             "name":"Logout",
             "command":{
               "type":"PROTOCOL",
-              "name":"LogoutCommand"
+              "name":"LogOutCommand"
             }
           }
         ]
-      } ,
-      {
-        "id": "AlbumDetailScreen",
+      },
+      {        "id": "AlbumDetailScreen",
         "name": "Album Detail",
         "type": "DetailScreenType",
         "dataCommand": {
@@ -372,10 +408,9 @@
         }
       },
       {
-        "id": "SelectGenre",
-        "buttonType": "SELECT_GENRE",
+        "id": "SelectGenre",        
         "name": "Select Genre",
-        "releaseCommand": {
+        "command": {
           "name": "SelectGenre",
           "type": "PROTOCOL",
           "params": [
@@ -436,7 +471,7 @@
       {
         "id": "SelectArtist",
         "name": "SelectArtist",
-        "type": "LIST_BUTTON_ACTION",
+        "type": "PROTOCOL",
         "command": {
           "name": "SelectArtist",
           "type": "PROTOCOL",
@@ -618,22 +653,22 @@
         }
       },
       {
-        "id": "action_1",
-        "name": "action_1",
+        "id": "SelectExploreItem",
+        "name": "SelectExploreItem",
         "type": "LIST_BUTTON_ACTION",
         "command": {
-          "name": "GetStationDetails",
+          "name": "SelectExploreItem",
           "type": "PROTOCOL",
           "params": [
             {
               "name": "screen",
-              "type": "DEFAULT",
-              "value": "Stationslistitem"
+              "type": "FIRST_SELECTED",
+              "value": "screen"
             },
             {
-              "name": "actionId",
-              "type": "DEFAULT",
-              "value": "action_1"
+              "name": "key",
+              "type": "FIRST_SELECTED",
+              "value": "key"
             }
           ]
         }
@@ -661,7 +696,7 @@
       },
       {
         "id": "SelectCategory",
-        "name": "SelectCategory",
+        "name": "Select Category",
         "type": "PROTOCOL",
         "command": {
           "name": "SelectCategory",
@@ -685,13 +720,17 @@
         "name": "Play",
         "type": "PROTOCOL",
         "command": {
-          "name": "PlayAction",
+          "name": "QueueSelect",
           "type": "PROTOCOL",
           "params": [
             {
               "name": "trackId",
               "type": "FIRST_SELECTED",
               "value": "id"
+            },
+            {"name": "idInQ",
+              "type": "FIRST_SELECTED",
+              "value": "idInQ"
             },
             {"name" : "source",
               "type": "DEFAULT",
@@ -830,7 +869,7 @@
           140,
           300
         ],
-        "template": "controller://driver/Zing/icons/logo/exported/icon_%size%.png"
+        "template": "controller://driver/Zing/icons/logo/icon_%size%x%size%.png"
       },
       {
         "id": "playIcon",
@@ -936,15 +975,68 @@
             "screenId": "LoggedInScreen"
           }
         ]
+      },
+      {
+        "id": "LoginError",
+        "iconId": "zing_logo",
+        "buttons": [
+          {
+            "name": "OK",
+            "screenId": "LoggedOutScreen"
+          }
+        ]
+      },
+      {
+        "id": "ConfirmLogOut",
+        "iconId": "zing_logo",
+        "buttons": [
+          {
+            "name": "OK",
+            "command": {
+              "name": "Logout",
+              "type": "PROTOCOL",
+              "params": [
+                {
+                  "name": "reason",
+                  "type": "DEFAULT",
+                  "value": "User Logged Out"
+                }
+              ]
+            }
+          }
+        ],
+        "cancelButton": {
+          "name": "CancelLogOut",          
+          "command": {
+            "name": "CancelLogOut",
+            "type": "PROTOCOL",
+            "params": [
+              {
+                "name": "reason",
+                "type": "DEFAULT",
+                "value": "User Logged Out"
+              }
+            ]
+
+          }
+        }
+    
       }
+      
     ],
     "search": {
       "filters": [
         {
-          "id": "Categories",
-          "name": "Category-All",
-          "screenId": "CategoriesScreen"
-        }],
+          "id": "My Library",
+          "name": "Search My Favorites",
+          "screenId": "ExploreScreen"
+        },
+        {
+          "id": "Explore",
+          "name": "Search Zing Library",
+          "screenId": "ExploreScreen"
+        }
+      ],
         "history": [
           {
             "dataCommand":{
@@ -953,7 +1045,8 @@
           },"deleteCommand":{
             "name":"DeleteSearchHistory",
             "type":"PROTOCOL"
-          }
+          },
+          "textProperty": "history_text"
         }        
       ]
     }

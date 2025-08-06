@@ -4,15 +4,36 @@ import * as builder from 'xmlbuilder2';
 import C4InterfaceCommand from './C4InterfaceCommand';
 
 @jsonObject
+export class C4NotificationButton {
+    @jsonMember
+    name: string;
+    
+    @jsonMember
+    screenId?: string;
+    
+    @jsonMember
+    command?: C4InterfaceCommand;
+}
+
+@jsonObject
+export class C4NotificationCancelButton {
+    @jsonMember
+    name: string;
+    
+    @jsonMember
+    command?: C4InterfaceCommand;
+}
+
+@jsonObject
 export default class C4InterfaceNotification {
     @jsonMember
     id: string;
     @jsonMember
     iconId: string;
-    @jsonArrayMember(Object)
-    buttons: any[];
+    @jsonArrayMember(C4NotificationButton)
+    buttons: C4NotificationButton[];
     @jsonMember
-    cancelButton?: any;
+    cancelButton?: C4NotificationCancelButton;
 
     toXml() {
         let node = builder.create('Notification').root();
@@ -39,7 +60,7 @@ export default class C4InterfaceNotification {
         }
         if (this.buttons && this.buttons.length > 0) {
             let buttons = node.ele('Buttons');
-            this.buttons.forEach((btn: any) => {
+            this.buttons.forEach((btn: C4NotificationButton) => {
                 let button = buttons.ele('Button');
                 button.ele('Name').txt(btn.name);
                 if (btn.command) {
@@ -74,24 +95,28 @@ export default class C4InterfaceNotification {
         notification.iconId = obj.IconId;
         
         if (obj.CancelButton) {
-            notification.cancelButton = {
-                name: obj.CancelButton.Name,
-                command: obj.CancelButton.Command ? C4InterfaceCommand.fromXml(obj.CancelButton.Command) : null
-            };
+            const cancelButton = new C4NotificationCancelButton();
+            cancelButton.name = obj.CancelButton.Name;
+            cancelButton.command = obj.CancelButton.Command ? C4InterfaceCommand.fromXml(obj.CancelButton.Command) : undefined;
+            notification.cancelButton = cancelButton;
         }
 
         if (obj.Buttons && obj.Buttons.Button) {
             notification.buttons = Array.isArray(obj.Buttons.Button)
-                ? obj.Buttons.Button.map((b: any) => ({
-                    name: b.Name,
-                    screenId: b.ScreenId,
-                    command: b.Command ? C4InterfaceCommand.fromXml(b.Command) : null
-                }))
-                : [{
-                    name: obj.Buttons.Button.Name,
-                    screenId: obj.Buttons.Button.ScreenId,
-                    command: obj.Buttons.Button.Command ? C4InterfaceCommand.fromXml(obj.Buttons.Button.Command) : null
-                }];
+                ? obj.Buttons.Button.map((b: any) => {
+                    const button = new C4NotificationButton();
+                    button.name = b.Name;
+                    button.screenId = b.ScreenId;
+                    button.command = b.Command ? C4InterfaceCommand.fromXml(b.Command) : undefined;
+                    return button;
+                })
+                : [(() => {
+                    const button = new C4NotificationButton();
+                    button.name = obj.Buttons.Button.Name;
+                    button.screenId = obj.Buttons.Button.ScreenId;
+                    button.command = obj.Buttons.Button.Command ? C4InterfaceCommand.fromXml(obj.Buttons.Button.Command) : undefined;
+                    return button;
+                })()];
         }
 
         return notification;
