@@ -213,6 +213,33 @@ export default class C4InterfaceScreen {
                     let textField = itemNode.ele("TextField");
                     if (item.property) textField.att("propertyName", item.property);
                     if (item.isPassword !== undefined) textField.att("isPassword", item.isPassword.toString());
+                } else if (item.type === "OnOff") {
+                    if (item.label) itemNode.ele("Label").txt(item.label);
+                    if (item.property) itemNode.ele("OnOff").att("propertyName", item.property);
+                } else if (item.type === "NumericSpinner") {
+                    if (item.label) itemNode.ele("Label").txt(item.label);
+                    let numericSpinner = itemNode.ele("NumericSpinner");
+                    if (item.property) numericSpinner.att("propertyName", item.property);
+                    if (item.minimum !== undefined && item.maximum !== undefined) {
+                        numericSpinner.ele("ValueRange").txt(`${item.minimum} ${item.maximum}`);
+                    }
+                    if (item.increment !== undefined) {
+                        numericSpinner.ele("Increment").txt(item.increment.toString());
+                    }
+                } else if (item.type === "ComboBox") {
+                    if (item.label) itemNode.ele("Label").txt(item.label);
+                    let comboBox = itemNode.ele("ComboBox");
+                    if (item.property) comboBox.att("propertyName", item.property);
+                    if (item.items && item.items.length > 0) {
+                        item.items.forEach((comboItem: any) => {
+                            let itemElement = comboBox.ele("Item");
+                            if (comboItem.id) itemElement.ele("Id").txt(comboItem.id);
+                            if (comboItem.value) itemElement.ele("Value").txt(comboItem.value);
+                        });
+                    }
+                } else if (item.type === "CheckBox") {
+                    if (item.label) itemNode.ele("Label").txt(item.label);
+                    if (item.property) itemNode.ele("CheckBox").att("propertyName", item.property);
                 } else if (item.type === "Button") {
                     let button = itemNode.ele("Button");
                     if (item.name) button.ele("Name").txt(item.name);
