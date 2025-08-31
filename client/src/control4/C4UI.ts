@@ -9,6 +9,7 @@ import C4InterfaceAction from './interface/C4InterfaceAction';
 import { C4InterfaceTransport } from './interface/C4InterfaceTransport';
 import C4InterfaceNotification from './interface/C4InterfaceNotification';
 import C4InterfaceSearch from './interface/C4InterfaceSearch';
+import { C4InterfaceFavoriteCommand } from './interface/C4InterfaceFavoriteCommand';
 
 import { asInt } from "./utility"
 
@@ -115,6 +116,9 @@ export class C4UI {
 
     @jsonArrayMember(C4InterfaceTransport)
     dashboard: C4InterfaceTransport[]
+
+    @jsonMember
+    favoriteCommand: C4InterfaceFavoriteCommand
 
     constructor() {
         this.icons = [];
@@ -403,6 +407,12 @@ export class C4UI {
             });
         }
 
+        // Add favorite command if present
+        if (this.favoriteCommand && typeof this.favoriteCommand.toXml === 'function') {
+            console.log(`[C4UI] Adding favorite command`);
+            this.favoriteCommand.toXml(node);
+        }
+
         console.log(`[C4UI] Completed toXml, returning node`);
         return node;
     }
@@ -450,6 +460,10 @@ export class C4UI {
             ui.notifications = obj.DriverNotifications.Notification.map(function (n) {
                 return C4InterfaceNotification.fromXml ? C4InterfaceNotification.fromXml(n) : n;
             });
+        }
+
+        if (obj.FavoriteCommand) {
+            ui.favoriteCommand = C4InterfaceFavoriteCommand.fromXml ? C4InterfaceFavoriteCommand.fromXml(obj.FavoriteCommand) : obj.FavoriteCommand;
         }
 
         return ui

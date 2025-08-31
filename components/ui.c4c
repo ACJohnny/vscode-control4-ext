@@ -308,6 +308,9 @@
           "type": "PROTOCOL"
         }
       }
-    ]
+    ],
+    "favoriteCommand": {
+      "name": "jumpToFavorite"
+    }
   }
 ] 
