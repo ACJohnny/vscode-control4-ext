@@ -252,7 +252,7 @@
       {
         "id": "SaveStation",
         "name": "Save Station",
-        "icon_id": "save_icon",
+        "iconId": "save_icon",
         "command": {
           "name": "SaveStation",
           "type": "PROTOCOL",
@@ -269,7 +269,7 @@
             "type": "Change",
             "property": "is_saved",
             "name": "Remove Station",
-            "icon_id": "remove_icon"
+            "iconId": "remove_icon"
           }
         ]
       }

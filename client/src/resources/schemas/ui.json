@@ -66,6 +66,14 @@
           "type": "string",
           "description": "The name of an item's property that contains a list of actions that will override the ActionIds defined actions."
         },
+        "defaultActionProperty": {
+          "type": "string",
+          "description": "Property that contains the default action for collection/list items. Output at screen level for CollectionScreenType and ListScreenType."
+        },
+        "ActionIdsProperty": {
+          "type": "string",
+          "description": "Property that contains the list of action IDs for collection/list items. Output at screen level for CollectionScreenType and ListScreenType."
+        },
         "titleProperty": {
           "type": "string",
           "description": "Maps the title of a list item to a data item property"

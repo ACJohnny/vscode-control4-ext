@@ -134,6 +134,19 @@ export default class C4InterfaceScreen {
             node.ele("LengthProperty").txt(this.lengthProperty);
         }
 
+        // Add DefaultActionProperty and ActionIdsProperty for CollectionScreenType and ListScreenType
+        // (screen-level or promoted from list)
+        if (this.type === "CollectionScreenType" || this.type === "ListScreenType") {
+            const defaultActionProperty = this.defaultActionProperty ?? this.list?.defaultActionProperty;
+            const actionIdsProperty = this.actionIdsProperty ?? this.list?.actionIdsProperty;
+            if (defaultActionProperty) {
+                node.ele("DefaultActionProperty").txt(defaultActionProperty);
+            }
+            if (actionIdsProperty) {
+                node.ele("ActionIdsProperty").txt(actionIdsProperty);
+            }
+        }
+
         // Add DefaultAction if present
         if (this.defaultAction) {
             node.ele("DefaultAction").txt(this.defaultAction);

@@ -12,6 +12,12 @@ export default class C4InterfaceList {
     defaultItemAction: string
 
     @jsonMember
+    defaultActionProperty: string
+
+    @jsonMember({ name: "ActionIdsProperty" })
+    actionIdsProperty: string
+
+    @jsonMember
     itemDefaultActionProperty: string
 
     @jsonArrayMember(String)
@@ -53,6 +59,14 @@ export default class C4InterfaceList {
 
         if (this.defaultItemAction) {
             node.ele("DefaultItemAction").txt(this.defaultItemAction);
+        }
+
+        if (this.defaultActionProperty) {
+            node.ele("DefaultActionProperty").txt(this.defaultActionProperty);
+        }
+
+        if (this.actionIdsProperty) {
+            node.ele("ActionIdsProperty").txt(this.actionIdsProperty);
         }
 
         if (this.itemDefaultActionProperty) {

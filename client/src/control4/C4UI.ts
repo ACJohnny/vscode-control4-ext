@@ -288,8 +288,8 @@ export class C4UI {
                 actionNode.ele("Id").txt(action.id);
                 actionNode.ele("Name").txt(action.name);
                 
-                if (action.icon_id) {
-                    actionNode.ele("IconId").txt(action.icon_id);
+                if (action.iconId) {
+                    actionNode.ele("IconId").txt(action.iconId);
                 }
 
                 if (action.edit_property) {
@@ -325,13 +325,13 @@ export class C4UI {
                             filterNode.ele("Name").txt(filter.name);
                         }
                         
-                        if (filter.icon_id) {
-                            filterNode.ele("IconId").txt(filter.icon_id);
+                        if (filter.iconId) {
+                            filterNode.ele("IconId").txt(filter.iconId);
                         }
                         
-                        if (filter.valid_values) {
+                        if (filter.validValues && filter.validValues.length > 0) {
                             let validValues = filterNode.ele("ValidValues");
-                            filter.valid_values.forEach((value: string) => {
+                            filter.validValues.forEach((value: string) => {
                                 validValues.ele("Value").txt(value);
                             });
                         }

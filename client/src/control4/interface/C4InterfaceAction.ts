@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { jsonMember, jsonObject, jsonArrayMember } from 'typedjson';
 import * as builder from 'xmlbuilder2';
 import C4InterfaceCommand from './C4InterfaceCommand';
+import C4InterfaceFilter from './C4InterfaceFilter';
 
 @jsonObject
 export default class C4InterfaceAction {
@@ -12,7 +13,7 @@ export default class C4InterfaceAction {
     name: string
 
     @jsonMember
-    icon_id: string
+    iconId: string
 
     @jsonMember
     edit_property: string
@@ -20,17 +21,17 @@ export default class C4InterfaceAction {
     @jsonMember
     command: C4InterfaceCommand
 
-    @jsonArrayMember(Object)
-    filters: any[]
+    @jsonArrayMember(C4InterfaceFilter)
+    filters: C4InterfaceFilter[]
 
     constructor(options?: any) {
         if (options) {
             this.id = options.id;
             this.name = options.name;
-            this.icon_id = options.icon_id;
+            this.iconId = options.iconId;
             this.edit_property = options.edit_property;
             this.command = options.command;
-            this.filters = options.filters;
+            this.filters = options.filters ? options.filters.map((f: any) => new C4InterfaceFilter(f)) : [];
         }
     }
 
@@ -40,8 +41,8 @@ export default class C4InterfaceAction {
         node.ele("Id").txt(this.id);
         node.ele("Name").txt(this.name);
         
-        if (this.icon_id) {
-            node.ele("IconId").txt(this.icon_id);
+        if (this.iconId) {
+            node.ele("IconId").txt(this.iconId);
         }
 
         if (this.edit_property) {
@@ -68,7 +69,7 @@ export default class C4InterfaceAction {
 
         if (this.filters) {
             let filters = node.ele("Filters");
-            this.filters.forEach((filter: any) => {
+            this.filters.forEach((filter: C4InterfaceFilter) => {
                 let filterNode = filters.ele("Filter");
                 filterNode.ele("Type").txt(filter.type);
                 filterNode.ele("Property").txt(filter.property);
@@ -77,13 +78,13 @@ export default class C4InterfaceAction {
                     filterNode.ele("Name").txt(filter.name);
                 }
                 
-                if (filter.icon_id) {
-                    filterNode.ele("IconId").txt(filter.icon_id);
+                if (filter.iconId) {
+                    filterNode.ele("IconId").txt(filter.iconId);
                 }
                 
-                if (filter.valid_values) {
+                if (filter.validValues && filter.validValues.length > 0) {
                     let validValues = filterNode.ele("ValidValues");
-                    filter.valid_values.forEach((value: string) => {
+                    filter.validValues.forEach((value: string) => {
                         validValues.ele("Value").txt(value);
                     });
                 }
@@ -98,7 +99,7 @@ export default class C4InterfaceAction {
         
         action.id = obj.Id;
         action.name = obj.Name;
-        action.icon_id = obj.IconId;
+        action.iconId = obj.IconId;
         action.edit_property = obj.EditProperty;
         
         if (obj.Command) {
@@ -107,20 +108,20 @@ export default class C4InterfaceAction {
 
         if (obj.Filters && obj.Filters.Filter) {
             action.filters = Array.isArray(obj.Filters.Filter)
-                ? obj.Filters.Filter.map((f: any) => ({
+                ? obj.Filters.Filter.map((f: any) => new C4InterfaceFilter({
                     type: f.Type,
                     property: f.Property,
                     name: f.Name,
-                    icon_id: f.IconId,
-                    valid_values: f.ValidValues ? f.ValidValues.Value : []
+                    iconId: f.IconId,
+                    validValues: f.ValidValues ? (Array.isArray(f.ValidValues.Value) ? f.ValidValues.Value : [f.ValidValues.Value]) : []
                 }))
-                : [{
+                : [new C4InterfaceFilter({
                     type: obj.Filters.Filter.Type,
                     property: obj.Filters.Filter.Property,
                     name: obj.Filters.Filter.Name,
-                    icon_id: obj.Filters.Filter.IconId,
-                    valid_values: obj.Filters.Filter.ValidValues ? obj.Filters.Filter.ValidValues.Value : []
-                }];
+                    iconId: obj.Filters.Filter.IconId,
+                    validValues: obj.Filters.Filter.ValidValues ? (Array.isArray(obj.Filters.Filter.ValidValues.Value) ? obj.Filters.Filter.ValidValues.Value : [obj.Filters.Filter.ValidValues.Value]) : []
+                })];
         }
 
         return action;

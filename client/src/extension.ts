@@ -391,8 +391,10 @@ export function activate(context: vscode.ExtensionContext) {
       t.panel = new PanelManager(context.extensionUri, `${t.name.toLowerCase()}.js`, t.name, t.resource)
 
       //@ts-ignore
-      t.provider.onSelectNode((e) => { vscode.commands.executeCommand(`control4.view${t.name}`, e); })
-      t.provider.onRemoveNode((e) => { vscode.commands.executeCommand(`control4.remove${t.name}`, e); })
+      if (t.provider) {
+        t.provider.onSelectNode((e) => { vscode.commands.executeCommand(`control4.view${t.name}`, e); })
+        t.provider.onRemoveNode((e) => { vscode.commands.executeCommand(`control4.remove${t.name}`, e); })
+      }
 
       context.subscriptions.push(vscode.commands.registerCommand(`control4.add${t.name}`, () => {
         t.panel.createOrShow(context.extensionUri, null);
@@ -412,54 +414,72 @@ export function activate(context: vscode.ExtensionContext) {
 
       context.subscriptions.push(vscode.commands.registerCommand(`control4.move${t.name}Up`, (n) => {
         t.resource.MoveUp(n.data);
-        t.provider.refresh();
+        if (t.provider) {
+          t.provider.refresh();
+        }
       }));
 
       context.subscriptions.push(vscode.commands.registerCommand(`control4.move${t.name}Down`, (n) => {
         t.resource.MoveDown(n.data);
-        t.provider.refresh();
+        if (t.provider) {
+          t.provider.refresh();
+        }
       }));
 
       context.subscriptions.push(vscode.commands.registerCommand(`control4.refresh${t.plural}`, () => {
-        t.provider.refresh()
+        if (t.provider) {
+          t.provider.refresh();
+        }
         t.resource.Reload();
       }));
 
       // [ ] - When a node is removed from the tree the Webview panel should either be disposed or updated to another exisitng node.
       context.subscriptions.push(vscode.commands.registerCommand(`control4.remove${t.name}`, (n) => {
         t.resource.Delete(n);
-        t.provider.refresh();
+        if (t.provider) {
+          t.provider.refresh();
+        }
       }));
     } else {
       // Handle dashboard specifically since it doesn't have a resource
       if (t.name === "Dashboard") {
         //@ts-ignore
-        t.provider.onSelectNode((e) => { vscode.commands.executeCommand(`control4.view${t.name}`, e); })
-        t.provider.onRemoveNode((e) => { vscode.commands.executeCommand(`control4.remove${t.name}`, e); })
+        if (t.provider) {
+          t.provider.onSelectNode((e) => { vscode.commands.executeCommand(`control4.view${t.name}`, e); })
+          t.provider.onRemoveNode((e) => { vscode.commands.executeCommand(`control4.remove${t.name}`, e); })
+        }
 
         context.subscriptions.push(vscode.commands.registerCommand(`control4.refresh${t.plural}`, () => {
-          t.provider.refresh()
+          if (t.provider) {
+            t.provider.refresh();
+          }
           dashboardResource.Reload();
         }));
 
         context.subscriptions.push(vscode.commands.registerCommand(`control4.remove${t.name}`, (n) => {
           dashboardResource.Delete(n.data);
-          t.provider.refresh();
+          if (t.provider) {
+            t.provider.refresh();
+          }
         }));
       }
       
       // Handle UI specifically to open source JSON
       if (t.name === "UI") {
         //@ts-ignore
-        t.provider.onSelectNode((e) => { vscode.commands.executeCommand(`control4.view${t.name}`, e); })
-        t.provider.onRemoveNode((e) => { vscode.commands.executeCommand(`control4.remove${t.name}`, e); })
+        if (t.provider) {
+          t.provider.onSelectNode((e) => { vscode.commands.executeCommand(`control4.view${t.name}`, e); })
+          t.provider.onRemoveNode((e) => { vscode.commands.executeCommand(`control4.remove${t.name}`, e); })
+        }
 
         context.subscriptions.push(vscode.commands.registerCommand(`control4.view${t.name}`, async (e) => {
           await openUISourceFile(e);
         }));
 
         context.subscriptions.push(vscode.commands.registerCommand(`control4.refresh${t.plural}`, () => {
-          t.provider.refresh();
+          if (t.provider) {
+            t.provider.refresh();
+          }
         }));
       }
     }
