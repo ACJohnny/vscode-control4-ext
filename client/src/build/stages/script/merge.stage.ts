@@ -32,7 +32,7 @@ export default class MergeStage extends BuildStage {
         for (const m of fileDocument.matchAll(/require\s*\(\s*(["'])([^"'\\]+)\1\s*\)/g)) {
             add(m[2]);
         }
-        for (const m of fileDocument.matchAll(/^\s*require\s+(["'])([^"'\\]+)\1/gm)) {
+        for (const m of fileDocument.matchAll(/require\s+(["'])([^"'\\]+)\1/g)) {
             add(m[2]);
         }
         return names;
@@ -69,8 +69,7 @@ export default class MergeStage extends BuildStage {
         try {
             const filePath = await this.FindModule(source, module);
             if (!filePath) {
-                console.log(`[MergeStage] Skipping module ${module} - file not found`);
-                return [];
+                throw new Error(`[MergeStage] Required module "${module}" was not found in source tree`);
             }
 
             let fileDocument = await ReadFileContents(filePath);
@@ -85,6 +84,11 @@ export default class MergeStage extends BuildStage {
 
             // Recursively retrieve all nested modules
             for (const nestedModuleName of nestedModuleNames) {
+                const nestedModulePath = await this.FindModule(source, nestedModuleName);
+                if (!nestedModulePath) {
+                    throw new Error(`[MergeStage] Required nested module "${nestedModuleName}" (from "${module}") was not found in source tree`);
+                }
+
                 let nested = await this.GetModules(source, nestedModuleName);
 
                 if (nested && nested.length > 0) {
@@ -102,7 +106,7 @@ export default class MergeStage extends BuildStage {
             return modules;
         } catch (error) {
             console.error(`[MergeStage] Error scanning module ${module}:`, error);
-            return [];
+            throw error;
         }
     }
 
@@ -192,7 +196,7 @@ export default class MergeStage extends BuildStage {
                         }
                     } catch (error) {
                         console.error(`[MergeStage] Error processing nested modules for ${moduleName}:`, error);
-                        // Continue processing other modules even if one fails
+                        throw error;
                     }
                 }
                 

@@ -114,6 +114,8 @@ export class Builder {
             }
         } catch (err) {
             failure += 1;
+            const errorMessage = err instanceof Error ? err.message : `${err}`;
+            vscode.window.showErrorMessage(`[${stage.name}] ${errorMessage}`);
 
             yield {
                 message: '\x1b[91m 𐄂 ' + stage.OnFailure(err) + '\x1b[0m'
