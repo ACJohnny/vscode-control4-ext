@@ -14,6 +14,30 @@ export default class MergeStage extends BuildStage {
         super("Merge", task, pkg, ctx);
     }
 
+    /**
+     * Collect Lua module names from require() forms used in DriverWorks drivers.
+     * drivers-common-public often uses require ('a.b') with parentheses and/or a leading
+     * assignment (e.g. Metrics = require ('...')); the line-anchored require "m" regex alone misses those.
+     */
+    static extractRequireModuleNames(fileDocument: string): string[] {
+        const names: string[] = [];
+        const seen = new Set<string>();
+        const add = (name: string | undefined) => {
+            const n = name?.trim();
+            if (n && !seen.has(n)) {
+                seen.add(n);
+                names.push(n);
+            }
+        };
+        for (const m of fileDocument.matchAll(/require\s*\(\s*(["'])([^"'\\]+)\1\s*\)/g)) {
+            add(m[2]);
+        }
+        for (const m of fileDocument.matchAll(/^\s*require\s+(["'])([^"'\\]+)\1/gm)) {
+            add(m[2]);
+        }
+        return names;
+    }
+
     regExpEscape(literal_string) {
         return literal_string.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, "\\$&");
     }
@@ -57,24 +81,10 @@ export default class MergeStage extends BuildStage {
                 return modules;
             }
 
-            // Use the same regex pattern as the squishy generation for consistency
-            // This pattern matches require statements in these formats:
-            // require('module') - with parentheses and quotes
-            // require 'module'  - without parentheses, with quotes
-            // require("module") - with parentheses and double quotes
-            // require "module"  - without parentheses, with double quotes
-            let r = new RegExp(/^\s*?require\s+([('"])([^'")]+)\1$/, "gm");
-            let moduleMatches = fileDocument.matchAll(r);
+            const nestedModuleNames = MergeStage.extractRequireModuleNames(fileDocument);
 
             // Recursively retrieve all nested modules
-            for (const match of moduleMatches) {
-                const nestedModuleName = match[2];
-                
-                if (!nestedModuleName || nestedModuleName.trim() === '') {
-                    console.warn(`[MergeStage] Skipping invalid nested module name: ${nestedModuleName}`);
-                    continue;
-                }
-                
+            for (const nestedModuleName of nestedModuleNames) {
                 let nested = await this.GetModules(source, nestedModuleName);
 
                 if (nested && nested.length > 0) {
@@ -157,17 +167,8 @@ export default class MergeStage extends BuildStage {
             if (
                 //Find required modules and generate a squishy file for DriverPackager
                 vscode.workspace.getConfiguration("control4").get<string>("buildMethod") == "DriverPackager") {
-                // Regex pattern to match require statements in these formats:
-                // require('module') - with parentheses and quotes
-                // require 'module'  - without parentheses, with quotes
-                // require("module") - with parentheses and double quotes
-                // require "module"  - without parentheses, with double quotes
-                let r = new RegExp(/^\s*?require\s+([('"])([^'")]+)\1$/, "gm");
-                let matches = srcDocument.matchAll(r);
-                
-                // Convert matches to array for easier processing
-                let matchesArray = Array.from(matches);
-                console.log(`[MergeStage] Found ${matchesArray.length} top-level require statements`);
+                const topLevelModules = MergeStage.extractRequireModuleNames(srcDocument);
+                console.log(`[MergeStage] Found ${topLevelModules.length} top-level require module(s)`);
                 
                 let squishyFile = path.join(intermediate, "squishy");
                 let squishes = ['Main "driver.lua"'];
@@ -178,14 +179,7 @@ export default class MergeStage extends BuildStage {
                 console.log(`[MergeStage] Intermediate directory: ${intermediate}`);
                 
                 // Process top-level requires
-                for (const match of matchesArray) {
-                    const moduleName = match[2];
-                    
-                    if (!moduleName || moduleName.trim() === '') {
-                        console.warn(`[MergeStage] Skipping invalid module name: ${moduleName}`);
-                        continue;
-                    }
-                    
+                for (const moduleName of topLevelModules) {
                     console.log(`[MergeStage] Processing top-level module: ${moduleName}`);
                     allModules.add(moduleName);
                     
