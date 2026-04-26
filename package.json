@@ -1,679 +1,683 @@
 {
-    "name": "vscode-control4",
-    "displayName": "Control4 DriverWorks Support",
-    "description": "Assists in the creation of Control4 drivers",
-    "icon": "images/annex4.png",
-    "version": "0.1.11",
-    "license": "GPL",
-    "publisher": "annex4-inc",    
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/annex4-inc/vscode-control4-ext.git"
-    },
-    "engines": {
-        "vscode": "^1.92.0"
-    },
-    "extensionKind": [
-        "ui",
-        "workspace"
-    ],
-    "extensionDependencies": [],
-    "categories": [
-        "Other"
-    ],
-    "activationEvents": [
-        "onLanguage:lua",
-        "onLanguage:c4c",
-        "workspaceContains:**/driver.lua",
-        "onCommand:control4.activate",
-        "onCommand:control4.package",
-        "onCommand:control4.release",
-        "onCustomEditor:control4.property"
-    ],
-    "main": "./client/out/extension",
-    "contributes": {
-        "taskDefinitions": [
-            {
-                "type": "control4",
-                "required": [
-                    "version"
-                ],
-                "properties": {
-                    "version": {
-                        "type": "string",
-                        "description": "The version for the build"
+    "name":  "vscode-control4",
+    "displayName":  "Control4 DriverWorks Support",
+    "description":  "Assists in the creation of Control4 drivers",
+    "icon":  "images/annex4.png",
+    "version":  "0.1.12",
+    "license":  "GPL",
+    "publisher":  "annex4-inc",
+    "repository":  {
+                       "type":  "git",
+                       "url":  "https://github.com/annex4-inc/vscode-control4-ext.git"
+                   },
+    "engines":  {
+                    "vscode":  "^1.92.0"
+                },
+    "extensionKind":  [
+                          "ui",
+                          "workspace"
+                      ],
+    "extensionDependencies":  [
+
+                              ],
+    "categories":  [
+                       "Other"
+                   ],
+    "activationEvents":  [
+                             "onLanguage:lua",
+                             "onLanguage:c4c",
+                             "workspaceContains:**/driver.lua",
+                             "onCommand:control4.activate",
+                             "onCommand:control4.package",
+                             "onCommand:control4.release",
+                             "onCustomEditor:control4.property"
+                         ],
+    "main":  "./client/out/extension",
+    "contributes":  {
+                        "taskDefinitions":  [
+                                                {
+                                                    "type":  "control4",
+                                                    "required":  [
+                                                                     "version"
+                                                                 ],
+                                                    "properties":  {
+                                                                       "version":  {
+                                                                                       "type":  "string",
+                                                                                       "description":  "The version for the build"
+                                                                                   },
+                                                                       "encryption":  {
+                                                                                          "type":  "boolean",
+                                                                                          "description":  "True to encrypt the output",
+                                                                                          "default":  false
+                                                                                      },
+                                                                       "template":  {
+                                                                                        "type":  "boolean",
+                                                                                        "description":  "True if this is a template that will be built elsewhere"
+                                                                                    },
+                                                                       "development":  {
+                                                                                           "type":  "boolean",
+                                                                                           "description":  "True if the driver should allow Lua execution",
+                                                                                           "default":  false
+                                                                                       },
+                                                                       "injections":  {
+                                                                                          "type":  "array",
+                                                                                          "description":  "List of items to be added at the beginning driver.lua",
+                                                                                          "default":  [
+
+                                                                                                      ]
+                                                                                      },
+                                                                       "merge":  {
+                                                                                     "type":  "boolean",
+                                                                                     "description":  "True if the driver should merge libraries into driver.lua. Uses squish when BuildMetheod is DriverPackager"
+                                                                                 },
+                                                                       "deploy":  {
+                                                                                      "type":  "object",
+                                                                                      "properties":  {
+                                                                                                         "port":  {
+                                                                                                                      "type":  "integer"
+                                                                                                                  },
+                                                                                                         "ip":  {
+                                                                                                                    "type":  "string"
+                                                                                                                }
+                                                                                                     }
+                                                                                  }
+                                                                   }
+                                                }
+                                            ],
+                        "commands":  [
+                                         {
+                                             "command":  "control4.rebuildTestDependencies",
+                                             "title":  "Rebuild Test Dependencies"
+                                         },
+                                         {
+                                             "command":  "control4.create",
+                                             "title":  "Create Project"
+                                         },
+                                         {
+                                             "command":  "control4.import",
+                                             "title":  "Import c4z"
+                                         },
+                                         {
+                                             "command":  "control4.restartLanguageServer",
+                                             "title":  "Restart Control4 Language Server"
+                                         },
+                                         {
+                                             "command":  "control4.reloadExtension",
+                                             "title":  "Reload Control4 Extension"
+                                         },
+                                         {
+                                             "command":  "control4.viewProperty",
+                                             "title":  "View Property",
+                                             "enablement":  "view == control4-properties"
+                                         },
+                                         {
+                                             "command":  "control4.refreshProperties",
+                                             "title":  "Refresh Properties",
+                                             "icon":  "$(extensions-refresh)",
+                                             "enablement":  "view == control4-properties"
+                                         },
+                                         {
+                                             "command":  "control4.addProperty",
+                                             "title":  "Add Property",
+                                             "icon":  "$(add)",
+                                             "enablement":  "view == control4-properties"
+                                         },
+                                         {
+                                             "command":  "control4.movePropertyUp",
+                                             "title":  "Move Property Up",
+                                             "icon":  "$(chevron-up)",
+                                             "enablement":  "view == control4-properties"
+                                         },
+                                         {
+                                             "command":  "control4.movePropertyDown",
+                                             "title":  "Move Property Down",
+                                             "icon":  "$(chevron-down)",
+                                             "enablement":  "view == control4-properties"
+                                         },
+                                         {
+                                             "command":  "control4.viewAction",
+                                             "title":  "View Action",
+                                             "enablement":  "view == control4-actions"
+                                         },
+                                         {
+                                             "command":  "control4.refreshActions",
+                                             "title":  "Refresh Actions",
+                                             "icon":  "$(extensions-refresh)",
+                                             "enablement":  "view == control4-actions"
+                                         },
+                                         {
+                                             "command":  "control4.addAction",
+                                             "title":  "Add Action",
+                                             "enablement":  "view == control4-actions"
+                                         },
+                                         {
+                                             "command":  "control4.moveActionUp",
+                                             "title":  "Move Action Up",
+                                             "icon":  "$(chevron-up)",
+                                             "enablement":  "view == control4-actions"
+                                         },
+                                         {
+                                             "command":  "control4.moveActionDown",
+                                             "title":  "Move Action Down",
+                                             "icon":  "$(chevron-down)",
+                                             "enablement":  "view == control4-actions"
+                                         },
+                                         {
+                                             "command":  "control4.viewCommand",
+                                             "title":  "View Command",
+                                             "enablement":  "view == control4-commands"
+                                         },
+                                         {
+                                             "command":  "control4.refreshCommands",
+                                             "title":  "Refresh Commands",
+                                             "icon":  "$(extensions-refresh)",
+                                             "enablement":  "view == control4-commands"
+                                         },
+                                         {
+                                             "command":  "control4.addCommand",
+                                             "title":  "Add Command",
+                                             "enablement":  "view == control4-commands"
+                                         },
+                                         {
+                                             "command":  "control4.moveCommandUp",
+                                             "title":  "Move Command Up",
+                                             "icon":  "$(chevron-up)",
+                                             "enablement":  "view == control4-commands"
+                                         },
+                                         {
+                                             "command":  "control4.moveCommandDown",
+                                             "title":  "Move Command Down",
+                                             "icon":  "$(chevron-down)",
+                                             "enablement":  "view == control4-commands"
+                                         },
+                                         {
+                                             "command":  "control4.viewConnection",
+                                             "title":  "View Connection",
+                                             "enablement":  "view == control4-connections"
+                                         },
+                                         {
+                                             "command":  "control4.refreshConnections",
+                                             "title":  "Refresh Connections",
+                                             "icon":  "$(extensions-refresh)",
+                                             "enablement":  "view == control4-connections"
+                                         },
+                                         {
+                                             "command":  "control4.addConnection",
+                                             "title":  "Add Connection",
+                                             "enablement":  "view == control4-connections"
+                                         },
+                                         {
+                                             "command":  "control4.moveConnectionUp",
+                                             "title":  "Move Connection Up",
+                                             "icon":  "$(chevron-up)",
+                                             "enablement":  "view == control4-connections"
+                                         },
+                                         {
+                                             "command":  "control4.moveConnectionDown",
+                                             "title":  "Move Connection Down",
+                                             "icon":  "$(chevron-down)",
+                                             "enablement":  "view == control4-connections"
+                                         },
+                                         {
+                                             "command":  "control4.viewEvent",
+                                             "title":  "View Event",
+                                             "enablement":  "view == control4-events"
+                                         },
+                                         {
+                                             "command":  "control4.refreshEvents",
+                                             "title":  "Refresh Events",
+                                             "icon":  "$(extensions-refresh)",
+                                             "enablement":  "view == control4-events"
+                                         },
+                                         {
+                                             "command":  "control4.addEvent",
+                                             "title":  "Add Event",
+                                             "enablement":  "view == control4-events"
+                                         },
+                                         {
+                                             "command":  "control4.moveEventUp",
+                                             "title":  "Move Event Up",
+                                             "icon":  "$(chevron-up)",
+                                             "enablement":  "view == control4-events"
+                                         },
+                                         {
+                                             "command":  "control4.moveEventDown",
+                                             "title":  "Move Event Down",
+                                             "icon":  "$(chevron-down)",
+                                             "enablement":  "view == control4-events"
+                                         },
+                                         {
+                                             "command":  "control4.viewNavDisplayOption",
+                                             "title":  "View Nav Disp Option",
+                                             "enablement":  "view == control4-navdisplayoptions"
+                                         },
+                                         {
+                                             "command":  "control4.refreshNavDisplayOptions",
+                                             "title":  "Refresh Nav Disp Options",
+                                             "icon":  "$(extensions-refresh)",
+                                             "enablement":  "view == control4-navdisplayoptions"
+                                         },
+                                         {
+                                             "command":  "control4.refreshDashboard",
+                                             "title":  "Refresh Dashboard",
+                                             "icon":  "$(extensions-refresh)",
+                                             "enablement":  "view == control4-dashboard"
+                                         },
+                                         {
+                                             "command":  "control4.refreshUI",
+                                             "title":  "Refresh UI",
+                                             "icon":  "$(extensions-refresh)",
+                                             "enablement":  "view == control4-ui"
+                                         },
+                                         {
+                                             "command":  "control4.addNavDisplayOption",
+                                             "title":  "Add Nav Disp Option",
+                                             "icon":  "$(add)",
+                                             "enablement":  "view == control4-navdisplayoptions"
+                                         },
+                                         {
+                                             "command":  "control4.moveNavDisplayOptionUp",
+                                             "title":  "Move Nav Disp Option Up",
+                                             "icon":  "$(chevron-up)",
+                                             "enablement":  "view == control4-navdisplayoptions"
+                                         },
+                                         {
+                                             "command":  "control4.moveNavDisplayOptionDown",
+                                             "title":  "Move Nav Disp Option Down",
+                                             "icon":  "$(chevron-down)",
+                                             "enablement":  "view == control4-navdisplayoptions"
+                                         },
+                                         {
+                                             "command":  "remove.C4Action",
+                                             "title":  "Remove Action",
+                                             "enablement":  "view == control4-actions"
+                                         },
+                                         {
+                                             "command":  "remove.C4Property",
+                                             "title":  "Remove Property",
+                                             "enablement":  "view == control4-properties"
+                                         },
+                                         {
+                                             "command":  "remove.C4Command",
+                                             "title":  "Remove Command",
+                                             "enablement":  "view == control4-commands"
+                                         },
+                                         {
+                                             "command":  "remove.C4Event",
+                                             "title":  "Remove Event",
+                                             "enablement":  "view == control4-events"
+                                         },
+                                         {
+                                             "command":  "remove.C4Connection",
+                                             "title":  "Remove Connection",
+                                             "enablement":  "view == control4-connections"
+                                         },
+                                         {
+                                             "command":  "remove.C4NavDisplayOption",
+                                             "title":  "Remove Nav Disp Option",
+                                             "enablement":  "view == control4-navdisplayoptions"
+                                         },
+                                         {
+                                             "command":  "remove.C4InterfaceTransport",
+                                             "title":  "Remove Dashboard Item",
+                                             "enablement":  "view == control4-dashboard"
+                                         }
+                                     ],
+                        "menus":  {
+                                      "view/title":  [
+                                                         {
+                                                             "command":  "control4.addProperty",
+                                                             "when":  "view == control4-properties"
+                                                         },
+                                                         {
+                                                             "command":  "control4.refreshProperties",
+                                                             "when":  "view == control4-properties",
+                                                             "group":  "navigation"
+                                                         },
+                                                         {
+                                                             "command":  "control4.addAction",
+                                                             "when":  "view == control4-actions"
+                                                         },
+                                                         {
+                                                             "command":  "control4.refreshActions",
+                                                             "when":  "view == control4-actions",
+                                                             "group":  "navigation"
+                                                         },
+                                                         {
+                                                             "command":  "control4.addCommand",
+                                                             "when":  "view == control4-commands"
+                                                         },
+                                                         {
+                                                             "command":  "control4.refreshCommands",
+                                                             "when":  "view == control4-commands",
+                                                             "group":  "navigation"
+                                                         },
+                                                         {
+                                                             "command":  "control4.addEvent",
+                                                             "when":  "view == control4-events"
+                                                         },
+                                                         {
+                                                             "command":  "control4.refreshEvents",
+                                                             "when":  "view == control4-events",
+                                                             "group":  "navigation"
+                                                         },
+                                                         {
+                                                             "command":  "control4.addConnection",
+                                                             "when":  "view == control4-connections"
+                                                         },
+                                                         {
+                                                             "command":  "control4.refreshConnections",
+                                                             "when":  "view == control4-connections",
+                                                             "group":  "navigation"
+                                                         },
+                                                         {
+                                                             "command":  "control4.addNavDisplayOption",
+                                                             "when":  "view == control4-navdisplayoptions"
+                                                         },
+                                                         {
+                                                             "command":  "control4.refreshNavDisplayOptions",
+                                                             "when":  "view == control4-navdisplayoptions",
+                                                             "group":  "navigation"
+                                                         },
+                                                         {
+                                                             "command":  "control4.refreshDashboard",
+                                                             "when":  "view == control4-dashboard",
+                                                             "group":  "navigation"
+                                                         },
+                                                         {
+                                                             "command":  "control4.refreshUI",
+                                                             "when":  "view == control4-ui",
+                                                             "group":  "navigation"
+                                                         }
+                                                     ],
+                                      "view/item/context":  [
+                                                                {
+                                                                    "command":  "remove.C4Property",
+                                                                    "when":  "view == control4-properties \u0026\u0026 viewItem == property"
+                                                                },
+                                                                {
+                                                                    "command":  "control4.movePropertyUp",
+                                                                    "when":  "view == control4-properties \u0026\u0026 viewItem == property",
+                                                                    "group":  "inline"
+                                                                },
+                                                                {
+                                                                    "command":  "control4.movePropertyDown",
+                                                                    "when":  "view == control4-properties \u0026\u0026 viewItem == property",
+                                                                    "group":  "inline"
+                                                                },
+                                                                {
+                                                                    "command":  "remove.C4Action",
+                                                                    "when":  "view == control4-actions \u0026\u0026 viewItem == action"
+                                                                },
+                                                                {
+                                                                    "command":  "control4.moveActionUp",
+                                                                    "when":  "view == control4-actions \u0026\u0026 viewItem == action",
+                                                                    "group":  "inline"
+                                                                },
+                                                                {
+                                                                    "command":  "control4.moveActionDown",
+                                                                    "when":  "view == control4-actions \u0026\u0026 viewItem == action",
+                                                                    "group":  "inline"
+                                                                },
+                                                                {
+                                                                    "command":  "remove.C4Command",
+                                                                    "when":  "view == control4-commands \u0026\u0026 viewItem == command"
+                                                                },
+                                                                {
+                                                                    "command":  "control4.moveCommandUp",
+                                                                    "when":  "view == control4-commands \u0026\u0026 viewItem == command",
+                                                                    "group":  "inline"
+                                                                },
+                                                                {
+                                                                    "command":  "control4.moveCommandDown",
+                                                                    "when":  "view == control4-commands \u0026\u0026 viewItem == command",
+                                                                    "group":  "inline"
+                                                                },
+                                                                {
+                                                                    "command":  "remove.C4Event",
+                                                                    "when":  "view == control4-events \u0026\u0026 viewItem == event"
+                                                                },
+                                                                {
+                                                                    "command":  "control4.moveEventUp",
+                                                                    "when":  "view == control4-events \u0026\u0026 viewItem == event",
+                                                                    "group":  "inline"
+                                                                },
+                                                                {
+                                                                    "command":  "control4.moveEventDown",
+                                                                    "when":  "view == control4-events \u0026\u0026 viewItem == event",
+                                                                    "group":  "inline"
+                                                                },
+                                                                {
+                                                                    "command":  "remove.C4Connection",
+                                                                    "when":  "view == control4-connections \u0026\u0026 viewItem == connection"
+                                                                },
+                                                                {
+                                                                    "command":  "control4.moveConnectionUp",
+                                                                    "when":  "view == control4-connections \u0026\u0026 viewItem == connection",
+                                                                    "group":  "inline"
+                                                                },
+                                                                {
+                                                                    "command":  "control4.moveConnectionDown",
+                                                                    "when":  "view == control4-connections \u0026\u0026 viewItem == connection",
+                                                                    "group":  "inline"
+                                                                },
+                                                                {
+                                                                    "command":  "remove.C4NavDisplayOption",
+                                                                    "when":  "view == control4-navdisplayoptions  \u0026\u0026 viewItem == navdisplayoption"
+                                                                },
+                                                                {
+                                                                    "command":  "remove.C4InterfaceTransport",
+                                                                    "when":  "view == control4-dashboard \u0026\u0026 viewItem == dashboard"
+                                                                },
+                                                                {
+                                                                    "command":  "control4.moveNavDisplayOptionUp",
+                                                                    "when":  "view == control4-navdisplayoptions \u0026\u0026 viewItem == navdisplayoption",
+                                                                    "group":  "inline"
+                                                                },
+                                                                {
+                                                                    "command":  "control4.moveNavDisplayOptionDown",
+                                                                    "when":  "view == control4-navdisplayoptions \u0026\u0026 viewItem == navdisplayoption",
+                                                                    "group":  "inline"
+                                                                }
+                                                            ]
+                                  },
+                        "configuration":  {
+                                              "title":  "Control4",
+                                              "properties":  {
+                                                                 "control4.buildMethod":  {
+                                                                                              "type":  "string",
+                                                                                              "default":  "OpenSSL",
+                                                                                              "enum":  [
+                                                                                                           "OpenSSL",
+                                                                                                           "DriverPackager"
+                                                                                                       ],
+                                                                                              "enumDescriptions":  [
+                                                                                                                       "Uses OpenSSL to encrypt the driver",
+                                                                                                                       "Uses DriverPackager from the Control4 DriverEditor to encrypt and package the driver"
+                                                                                                                   ]
+                                                                                          },
+                                                                 "control4.driverPackagerLocation":  {
+                                                                                                         "type":  "string",
+                                                                                                         "default":  "C:\\Program Files (x86)\\Control4\\DriverEditor301\\DriverPackager.exe",
+                                                                                                         "description":  "The location of DriverPackager.exe."
+                                                                                                     },
+                                                                 "control4.driverValidatorLocation":  {
+                                                                                                          "type":  "string",
+                                                                                                          "default":  "C:\\Program Files (x86)\\Control4\\DriverEditor301\\DriverValidator.exe",
+                                                                                                          "description":  "The location of DriverValidator.exe."
+                                                                                                      },
+                                                                 "control4.build.autoIncrementVersion":  {
+                                                                                                             "type":  "boolean",
+                                                                                                             "default":  true,
+                                                                                                             "description":  "Automatically increment the package version"
+                                                                                                         },
+                                                                 "control4.build.exportToDriverLocation":  {
+                                                                                                               "type":  "boolean",
+                                                                                                               "default":  true,
+                                                                                                               "description":  "Automatically deploy built drivers to the Control4 driver directory"
+                                                                                                           },
+                                                                 "control4.build.directory":  {
+                                                                                                  "type":  "string",
+                                                                                                  "default":  "%USERPROFILE%\\Documents\\Control4\\Drivers",
+                                                                                                  "description":  "The directory to the Control4 drivers folder"
+                                                                                              },
+                                                                 "control4.publish.author":  {
+                                                                                                 "type":  "string",
+                                                                                                 "default":  "${env:USERNAME}"
+                                                                                             }
+                                                             }
+                                          },
+                        "views":  {
+                                      "control4":  [
+                                                       {
+                                                           "id":  "control4-properties",
+                                                           "name":  "Properties"
+                                                       },
+                                                       {
+                                                           "id":  "control4-actions",
+                                                           "name":  "Actions"
+                                                       },
+                                                       {
+                                                           "id":  "control4-events",
+                                                           "name":  "Events"
+                                                       },
+                                                       {
+                                                           "id":  "control4-commands",
+                                                           "name":  "Commands"
+                                                       },
+                                                       {
+                                                           "id":  "control4-connections",
+                                                           "name":  "Connections"
+                                                       },
+                                                       {
+                                                           "id":  "control4-navdisplayoptions",
+                                                           "name":  "Navigator Display Options"
+                                                       },
+                                                       {
+                                                           "id":  "control4-ui",
+                                                           "name":  "UI"
+                                                       },
+                                                       {
+                                                           "id":  "control4-dashboard",
+                                                           "name":  "Dashboard"
+                                                       }
+                                                   ]
+                                  },
+                        "viewsContainers":  {
+                                                "activitybar":  [
+                                                                    {
+                                                                        "id":  "control4",
+                                                                        "title":  "Control4",
+                                                                        "icon":  "./client/media/control4.svg"
+                                                                    }
+                                                                ]
+                                            },
+                        "viewsWelcome":  [
+                                             {
+                                                 "view":  "control4-properties",
+                                                 "contents":  "No properties found.\n[Add Property](command:control4.addProperty)"
+                                             },
+                                             {
+                                                 "view":  "control4-actions",
+                                                 "contents":  "No actions found.\n[Add Action](command:control4.addAction)"
+                                             },
+                                             {
+                                                 "view":  "control4-events",
+                                                 "contents":  "No events found.\n[Add Event](command:control4.addEvent)"
+                                             },
+                                             {
+                                                 "view":  "control4-commands",
+                                                 "contents":  "No commands found.\n[Add Command](command:control4.addCommand)"
+                                             },
+                                             {
+                                                 "view":  "control4-connections",
+                                                 "contents":  "No connections found.\n[Add Connection](command:control4.addConnection)"
+                                             },
+                                             {
+                                                 "view":  "control4-ui",
+                                                 "contents":  "No UI found."
+                                             },
+                                             {
+                                                 "view":  "control4-navdisplayoptions",
+                                                 "contents":  "No Nav Display Options found.\n[Add Nav Display Option](command:control4.addNavDisplayOption)"
+                                             },
+                                             {
+                                                 "view":  "control4-dashboard",
+                                                 "contents":  "No dashboard items found."
+                                             }
+                                         ],
+                        "jsonValidation":  [
+                                               {
+                                                   "fileMatch":  "actions.c4c",
+                                                   "url":  "./client/src/resources/schemas/actions.json"
+                                               },
+                                               {
+                                                   "fileMatch":  "properties.c4c",
+                                                   "url":  "./client/src/resources/schemas/properties.json"
+                                               },
+                                               {
+                                                   "fileMatch":  "commands.c4c",
+                                                   "url":  "./client/src/resources/schemas/commands.json"
+                                               },
+                                               {
+                                                   "fileMatch":  "events.c4c",
+                                                   "url":  "./client/src/resources/schemas/events.json"
+                                               },
+                                               {
+                                                   "fileMatch":  "connections.c4c",
+                                                   "url":  "./client/src/resources/schemas/connections.json"
+                                               },
+                                               {
+                                                   "fileMatch":  "proxies.c4c",
+                                                   "url":  "./client/src/resources/schemas/proxies.json"
+                                               },
+                                               {
+                                                   "fileMatch":  "package.json",
+                                                   "url":  "./client/src/resources/schemas/package.json"
+                                               },
+                                               {
+                                                   "fileMatch":  "ui.c4c",
+                                                   "url":  "./client/src/resources/schemas/ui.json"
+                                               },
+                                               {
+                                                   "fileMatch":  "navdisplayoptions.c4c",
+                                                   "url":  "./client/src/resources/schemas/navdisplayoptions.json"
+                                               }
+                                           ]
                     },
-                    "encryption": {
-                        "type": "boolean",
-                        "description": "True to encrypt the output",
-                        "default": false
-                    },
-                    "template": {
-                        "type": "boolean",
-                        "description": "True if this is a template that will be built elsewhere"
-                    },
-                    "development": {
-                        "type": "boolean",
-                        "description": "True if the driver should allow Lua execution",
-                        "default": false
-                    },
-                    "injections":{
-                        "type": "array",
-                        "description": "List of items to be added at the beginning driver.lua",
-                        "default": []
-                    },
-                    "merge": {
-                        "type": "boolean",
-                        "description": "True if the driver should merge libraries into driver.lua. Uses squish when BuildMetheod is DriverPackager"
-                    },                   
-                    "deploy": {
-                        "type": "object",
-                        "properties": {
-                            "port": {
-                                "type": "integer"
-                            },
-                            "ip": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        ],
-        "commands": [
-            {
-                "command": "control4.rebuildTestDependencies",
-                "title": "Rebuild Test Dependencies"
-            },
-            {
-                "command": "control4.create",
-                "title": "Create Project"
-            },
-            {
-                "command": "control4.import",
-                "title": "Import c4z"
-            },
-            {
-                "command": "control4.restartLanguageServer",
-                "title": "Restart Control4 Language Server"
-            },
-            {
-                "command": "control4.reloadExtension",
-                "title": "Reload Control4 Extension"
-            },
-            {
-                "command": "control4.viewProperty",
-                "title": "View Property",
-                "enablement": "view == control4-properties"
-            },
-            {
-                "command": "control4.refreshProperties",
-                "title": "Refresh Properties",
-                "icon": "$(extensions-refresh)",
-                "enablement": "view == control4-properties"
-            },
-            {
-                "command": "control4.addProperty",
-                "title": "Add Property",
-                "icon": "$(add)",
-                "enablement": "view == control4-properties"
-            },
-            {
-                "command": "control4.movePropertyUp",
-                "title": "Move Property Up",
-                "icon": "$(chevron-up)",
-                "enablement": "view == control4-properties"
-            },
-            {
-                "command": "control4.movePropertyDown",
-                "title": "Move Property Down",
-                "icon": "$(chevron-down)",
-                "enablement": "view == control4-properties"
-            },
-            {
-                "command": "control4.viewAction",
-                "title": "View Action",
-                "enablement": "view == control4-actions"
-            },
-            {
-                "command": "control4.refreshActions",
-                "title": "Refresh Actions",
-                "icon": "$(extensions-refresh)",
-                "enablement": "view == control4-actions"
-            },
-            {
-                "command": "control4.addAction",
-                "title": "Add Action",
-                "enablement": "view == control4-actions"
-            },
-            {
-                "command": "control4.moveActionUp",
-                "title": "Move Action Up",
-                "icon": "$(chevron-up)",
-                "enablement": "view == control4-actions"
-            },
-            {
-                "command": "control4.moveActionDown",
-                "title": "Move Action Down",
-                "icon": "$(chevron-down)",
-                "enablement": "view == control4-actions"
-            },
-            {
-                "command": "control4.viewCommand",
-                "title": "View Command",
-                "enablement": "view == control4-commands"
-            },
-            {
-                "command": "control4.refreshCommands",
-                "title": "Refresh Commands",
-                "icon": "$(extensions-refresh)",
-                "enablement": "view == control4-commands"
-            },
-            {
-                "command": "control4.addCommand",
-                "title": "Add Command",
-                "enablement": "view == control4-commands"
-            },
-            {
-                "command": "control4.moveCommandUp",
-                "title": "Move Command Up",
-                "icon": "$(chevron-up)",
-                "enablement": "view == control4-commands"
-            },
-            {
-                "command": "control4.moveCommandDown",
-                "title": "Move Command Down",
-                "icon": "$(chevron-down)",
-                "enablement": "view == control4-commands"
-            },
-            {
-                "command": "control4.viewConnection",
-                "title": "View Connection",
-                "enablement": "view == control4-connections"
-            },
-            {
-                "command": "control4.refreshConnections",
-                "title": "Refresh Connections",
-                "icon": "$(extensions-refresh)",
-                "enablement": "view == control4-connections"
-            },
-            {
-                "command": "control4.addConnection",
-                "title": "Add Connection",
-                "enablement": "view == control4-connections"
-            },
-            {
-                "command": "control4.moveConnectionUp",
-                "title": "Move Connection Up",
-                "icon": "$(chevron-up)",
-                "enablement": "view == control4-connections"
-            },
-            {
-                "command": "control4.moveConnectionDown",
-                "title": "Move Connection Down",
-                "icon": "$(chevron-down)",
-                "enablement": "view == control4-connections"
-            },
-            {
-                "command": "control4.viewEvent",
-                "title": "View Event",
-                "enablement": "view == control4-events"
-            },
-            {
-                "command": "control4.refreshEvents",
-                "title": "Refresh Events",
-                "icon": "$(extensions-refresh)",
-                "enablement": "view == control4-events"
-            },
-            {
-                "command": "control4.addEvent",
-                "title": "Add Event",
-                "enablement": "view == control4-events"
-            },
-            {
-                "command": "control4.moveEventUp",
-                "title": "Move Event Up",
-                "icon": "$(chevron-up)",
-                "enablement": "view == control4-events"
-            },
-            {
-                "command": "control4.moveEventDown",
-                "title": "Move Event Down",
-                "icon": "$(chevron-down)",
-                "enablement": "view == control4-events"
-            },
-            {
-                "command": "control4.viewNavDisplayOption",
-                "title": "View Nav Disp Option",
-                "enablement": "view == control4-navdisplayoptions"
-            },
-            {
-                "command": "control4.refreshNavDisplayOptions",
-                "title": "Refresh Nav Disp Options",
-                "icon": "$(extensions-refresh)",
-                "enablement": "view == control4-navdisplayoptions"
-            },
-            {
-                "command": "control4.refreshDashboard",
-                "title": "Refresh Dashboard",
-                "icon": "$(extensions-refresh)",
-                "enablement": "view == control4-dashboard"
-            },
-            {
-                "command": "control4.refreshUI",
-                "title": "Refresh UI",
-                "icon": "$(extensions-refresh)",
-                "enablement": "view == control4-ui"
-            },
-            {
-                "command": "control4.addNavDisplayOption",
-                "title": "Add Nav Disp Option",
-                "icon": "$(add)",
-                "enablement": "view == control4-navdisplayoptions"
-            },
-            {
-                "command": "control4.moveNavDisplayOptionUp",
-                "title": "Move Nav Disp Option Up",
-                "icon": "$(chevron-up)",
-                "enablement": "view == control4-navdisplayoptions"
-            },
-            {
-                "command": "control4.moveNavDisplayOptionDown",
-                "title": "Move Nav Disp Option Down",
-                "icon": "$(chevron-down)",
-                "enablement": "view == control4-navdisplayoptions"
-            },
-            {
-                "command": "remove.C4Action",
-                "title": "Remove Action",
-                "enablement": "view == control4-actions"
-            },
-            {
-                "command": "remove.C4Property",
-                "title": "Remove Property",
-                "enablement": "view == control4-properties"
-            },
-            {
-                "command": "remove.C4Command",
-                "title": "Remove Command",
-                "enablement": "view == control4-commands"
-            },
-            {
-                "command": "remove.C4Event",
-                "title": "Remove Event",
-                "enablement": "view == control4-events"
-            },
-            {
-                "command": "remove.C4Connection",
-                "title": "Remove Connection",
-                "enablement": "view == control4-connections"
-            },
-            {
-                "command": "remove.C4NavDisplayOption",
-                "title": "Remove Nav Disp Option",
-                "enablement": "view == control4-navdisplayoptions"
-            },
-            {
-                "command": "remove.C4InterfaceTransport",
-                "title": "Remove Dashboard Item",
-                "enablement": "view == control4-dashboard"
-            }
-        ],
-        "menus": {
-            "view/title": [
-                {
-                    "command": "control4.addProperty",
-                    "when": "view == control4-properties"
+    "scripts":  {
+                    "vscode:prepublish":  "npm run webpack \u0026\u0026 npm run compile:web",
+                    "dev":  "npm run webpack:dev \u0026\u0026 npm run compile:web",
+                    "build":  "npm run webpack \u0026\u0026 npm run compile:web \u0026\u0026 npm run compile",
+                    "webpack":  "npm run clean \u0026\u0026 webpack --mode production --config ./client/webpack.config.js \u0026\u0026 webpack --mode production --config ./server/webpack.config.js",
+                    "webpack:dev":  "npm run clean \u0026\u0026 webpack --mode none --config ./client/webpack.config.js \u0026\u0026 webpack --mode none --config ./server/webpack.config.js",
+                    "compile":  "tsc -b",
+                    "compile:web":  "cd client \u0026\u0026 npm run web \u0026\u0026 cd ..",
+                    "compile:client":  "tsc -b ./client/tsconfig.json",
+                    "compile:server":  "tsc -b ./server/tsconfig.json",
+                    "watch":  "tsc -b -w",
+                    "postinstall":  "cd client \u0026\u0026 npm install \u0026\u0026 cd ../server \u0026\u0026 npm install \u0026\u0026 cd ..",
+                    "clean":  "rimraf client/out \u0026\u0026 rimraf server/out",
+                    "deploy":  "vsce publish",
+                    "test":  "tsc -b \u0026\u0026 cd client \u0026\u0026 node out/test/runTest.js \u0026\u0026 cd .."
                 },
-                {
-                    "command": "control4.refreshProperties",
-                    "when": "view == control4-properties",
-                    "group": "navigation"
-                },
-                {
-                    "command": "control4.addAction",
-                    "when": "view == control4-actions"
-                },
-                {
-                    "command": "control4.refreshActions",
-                    "when": "view == control4-actions",
-                    "group": "navigation"
-                },
-                {
-                    "command": "control4.addCommand",
-                    "when": "view == control4-commands"
-                },
-                {
-                    "command": "control4.refreshCommands",
-                    "when": "view == control4-commands",
-                    "group": "navigation"
-                },
-                {
-                    "command": "control4.addEvent",
-                    "when": "view == control4-events"
-                },
-                {
-                    "command": "control4.refreshEvents",
-                    "when": "view == control4-events",
-                    "group": "navigation"
-                },
-                {
-                    "command": "control4.addConnection",
-                    "when": "view == control4-connections"
-                },
-                {
-                    "command": "control4.refreshConnections",
-                    "when": "view == control4-connections",
-                    "group": "navigation"
-                },
-                {
-                    "command": "control4.addNavDisplayOption",
-                    "when": "view == control4-navdisplayoptions"
-                },
-                {
-                    "command": "control4.refreshNavDisplayOptions",
-                    "when": "view == control4-navdisplayoptions",
-                    "group": "navigation"
-                },
-                {
-                    "command": "control4.refreshDashboard",
-                    "when": "view == control4-dashboard",
-                    "group": "navigation"
-                },
-                {
-                    "command": "control4.refreshUI",
-                    "when": "view == control4-ui",
-                    "group": "navigation"
-                }
-            ],
-            "view/item/context": [
-                {
-                    "command": "remove.C4Property",
-                    "when": "view == control4-properties && viewItem == property"
-                },
-                {
-                    "command": "control4.movePropertyUp",
-                    "when": "view == control4-properties && viewItem == property",
-                    "group": "inline"
-                },
-                {
-                    "command": "control4.movePropertyDown",
-                    "when": "view == control4-properties && viewItem == property",
-                    "group": "inline"
-                },
-                {
-                    "command": "remove.C4Action",
-                    "when": "view == control4-actions && viewItem == action"
-                },
-                {
-                    "command": "control4.moveActionUp",
-                    "when": "view == control4-actions && viewItem == action",
-                    "group": "inline"
-                },
-                {
-                    "command": "control4.moveActionDown",
-                    "when": "view == control4-actions && viewItem == action",
-                    "group": "inline"
-                },
-                {
-                    "command": "remove.C4Command",
-                    "when": "view == control4-commands && viewItem == command"
-                },
-                {
-                    "command": "control4.moveCommandUp",
-                    "when": "view == control4-commands && viewItem == command",
-                    "group": "inline"
-                },
-                {
-                    "command": "control4.moveCommandDown",
-                    "when": "view == control4-commands && viewItem == command",
-                    "group": "inline"
-                },
-                {
-                    "command": "remove.C4Event",
-                    "when": "view == control4-events && viewItem == event"
-                },
-                {
-                    "command": "control4.moveEventUp",
-                    "when": "view == control4-events && viewItem == event",
-                    "group": "inline"
-                },
-                {
-                    "command": "control4.moveEventDown",
-                    "when": "view == control4-events && viewItem == event",
-                    "group": "inline"
-                },
-                {
-                    "command": "remove.C4Connection",
-                    "when": "view == control4-connections && viewItem == connection"
-                },
-                {
-                    "command": "control4.moveConnectionUp",
-                    "when": "view == control4-connections && viewItem == connection",
-                    "group": "inline"
-                },
-                {
-                    "command": "control4.moveConnectionDown",
-                    "when": "view == control4-connections && viewItem == connection",
-                    "group": "inline"
-                },
-                {
-                    "command": "remove.C4NavDisplayOption",
-                    "when": "view == control4-navdisplayoptions  && viewItem == navdisplayoption"
-                },
-                {
-                    "command": "remove.C4InterfaceTransport",
-                    "when": "view == control4-dashboard && viewItem == dashboard"
-                },
-                {
-                    "command": "control4.moveNavDisplayOptionUp",
-                    "when": "view == control4-navdisplayoptions && viewItem == navdisplayoption",
-                    "group": "inline"
-                },
-                {
-                    "command": "control4.moveNavDisplayOptionDown",
-                    "when": "view == control4-navdisplayoptions && viewItem == navdisplayoption",
-                    "group": "inline"
-                }
-            ]
-        },
-        "configuration": {
-            "title": "Control4",
-            "properties": {
-                "control4.buildMethod": {
-                    "type": "string",
-                    "default": "OpenSSL",
-                    "enum": [
-                        "OpenSSL",
-                        "DriverPackager"
-                    ],
-                    "enumDescriptions": [
-                        "Uses OpenSSL to encrypt the driver",
-                        "Uses DriverPackager from the Control4 DriverEditor to encrypt and package the driver"
-                    ]
-                },
-                "control4.driverPackagerLocation": {
-                    "type": "string",
-                    "default": "C:\\Program Files (x86)\\Control4\\DriverEditor301\\DriverPackager.exe",
-                    "description": "The location of DriverPackager.exe."
-                },
-                "control4.driverValidatorLocation": {
-                    "type": "string",
-                    "default": "C:\\Program Files (x86)\\Control4\\DriverEditor301\\DriverValidator.exe",
-                    "description": "The location of DriverValidator.exe."
-                },
-                "control4.build.autoIncrementVersion": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Automatically increment the package version"
-                },
-                "control4.build.exportToDriverLocation": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Automatically deploy built drivers to the Control4 driver directory"
-                },
-                "control4.build.directory": {
-                    "type": "string",
-                    "default": "%USERPROFILE%\\Documents\\Control4\\Drivers",
-                    "description": "The directory to the Control4 drivers folder"
-                },
-                "control4.publish.author": {
-                    "type": "string",
-                    "default": "${env:USERNAME}"
-                }
-            }
-        },
-        "views": {
-            "control4": [
-                {
-                    "id": "control4-properties",
-                    "name": "Properties"
-                },
-                {
-                    "id": "control4-actions",
-                    "name": "Actions"
-                },
-                {
-                    "id": "control4-events",
-                    "name": "Events"
-                },
-                {
-                    "id": "control4-commands",
-                    "name": "Commands"
-                },
-                {
-                    "id": "control4-connections",
-                    "name": "Connections"
-                },
-                {
-                    "id": "control4-navdisplayoptions",
-                    "name": "Navigator Display Options"
-                },
-                {
-                    "id": "control4-ui",
-                    "name": "UI"
-                },
-                {
-                    "id": "control4-dashboard",
-                    "name": "Dashboard"
-                }
-            ]
-        },
-        "viewsContainers": {
-            "activitybar": [
-                {
-                    "id": "control4",
-                    "title": "Control4",
-                    "icon": "./client/media/control4.svg"
-                }
-            ]
-        },
-        "viewsWelcome": [
-            {
-                "view": "control4-properties",
-                "contents": "No properties found.\n[Add Property](command:control4.addProperty)"
-            },
-            {
-                "view": "control4-actions",
-                "contents": "No actions found.\n[Add Action](command:control4.addAction)"
-            },
-            {
-                "view": "control4-events",
-                "contents": "No events found.\n[Add Event](command:control4.addEvent)"
-            },
-            {
-                "view": "control4-commands",
-                "contents": "No commands found.\n[Add Command](command:control4.addCommand)"
-            },
-            {
-                "view": "control4-connections",
-                "contents": "No connections found.\n[Add Connection](command:control4.addConnection)"
-            },
-            {
-                "view": "control4-ui",
-                "contents": "No UI found."
-            },
-            {
-                "view": "control4-navdisplayoptions",
-                "contents": "No Nav Display Options found.\n[Add Nav Display Option](command:control4.addNavDisplayOption)"
-            },
-            {
-                "view": "control4-dashboard",
-                "contents": "No dashboard items found."
-            }
-        ],
-        "jsonValidation": [
-            {
-                "fileMatch": "actions.c4c",
-                "url": "./client/src/resources/schemas/actions.json"
-            },
-            {
-                "fileMatch": "properties.c4c",
-                "url": "./client/src/resources/schemas/properties.json"
-            },
-            {
-                "fileMatch": "commands.c4c",
-                "url": "./client/src/resources/schemas/commands.json"
-            },
-            {
-                "fileMatch": "events.c4c",
-                "url": "./client/src/resources/schemas/events.json"
-            },
-            {
-                "fileMatch": "connections.c4c",
-                "url": "./client/src/resources/schemas/connections.json"
-            },
-            {
-                "fileMatch": "proxies.c4c",
-                "url": "./client/src/resources/schemas/proxies.json"
-            },
-            {
-                "fileMatch": "package.json",
-                "url": "./client/src/resources/schemas/package.json"
-            },
-            {
-                "fileMatch": "ui.c4c",
-                "url": "./client/src/resources/schemas/ui.json"
-            },
-            {
-                "fileMatch": "navdisplayoptions.c4c",
-                "url": "./client/src/resources/schemas/navdisplayoptions.json"
-            }
-        ]
-    },
-    "scripts": {
-        "vscode:prepublish": "npm run webpack && npm run compile:web",
-        "dev": "npm run webpack:dev && npm run compile:web",
-        "build": "npm run webpack && npm run compile:web && npm run compile",
-        "webpack": "npm run clean && webpack --mode production --config ./client/webpack.config.js && webpack --mode production --config ./server/webpack.config.js",
-        "webpack:dev": "npm run clean && webpack --mode none --config ./client/webpack.config.js && webpack --mode none --config ./server/webpack.config.js",
-        "compile": "tsc -b",
-        "compile:web": "cd client && npm run web && cd ..",
-        "compile:client": "tsc -b ./client/tsconfig.json",
-        "compile:server": "tsc -b ./server/tsconfig.json",
-        "watch": "tsc -b -w",
-        "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
-        "clean": "rimraf client/out && rimraf server/out",
-        "deploy": "vsce publish",
-        "test": "tsc -b && cd client && node out/test/runTest.js && cd .."
-    },
-    "devDependencies": {
-        "@types/mocha": "^10.0.7",
-        "@types/node": "^22.4.2",
-        "@types/semver": "^7.5.8",
-        "@types/vscode": "1.92.0",
-        "@typescript-eslint/eslint-plugin": "^8.2.0",
-        "@typescript-eslint/parser": "^8.2.0",
-        "@vscode/test-electron": "^2.4.1",
-        "merge-options": "^3.0.4",
-        "rimraf": "^6.0.1",
-        "tmp-promise": "^3.0.3",
-        "ts-loader": "^9.5.1",
-        "typescript": "^5.5.4",
-        "webpack": "^5.93.0",
-        "webpack-cli": "^5.1.4"
-    },
-    "dependencies": {
-        "semver": "^7.5.4"      
-    }
+    "devDependencies":  {
+                            "@types/mocha":  "^10.0.7",
+                            "@types/node":  "^22.4.2",
+                            "@types/semver":  "^7.5.8",
+                            "@types/vscode":  "1.92.0",
+                            "@typescript-eslint/eslint-plugin":  "^8.2.0",
+                            "@typescript-eslint/parser":  "^8.2.0",
+                            "@vscode/test-electron":  "^2.4.1",
+                            "merge-options":  "^3.0.4",
+                            "rimraf":  "^6.0.1",
+                            "tmp-promise":  "^3.0.3",
+                            "ts-loader":  "^9.5.1",
+                            "typescript":  "^5.5.4",
+                            "webpack":  "^5.93.0",
+                            "webpack-cli":  "^5.1.4"
+                        },
+    "dependencies":  {
+                         "semver":  "^7.5.4"
+                     }
 }
