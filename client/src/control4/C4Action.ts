@@ -13,6 +13,9 @@ export class C4Action {
     @jsonMember
     command: string
 
+    @jsonMember
+    sort_order?: number
+
     @jsonArrayMember(C4Parameter)
     params?: C4Parameter[]
 
@@ -44,6 +47,7 @@ export class C4Action {
 
         a.name = obj.name
         a.command = obj.command
+        a.sort_order = obj.sort_order !== undefined ? Number(obj.sort_order) : undefined
 
         if (obj.params) {
             let params = cleanXmlArray(obj.params, "param");

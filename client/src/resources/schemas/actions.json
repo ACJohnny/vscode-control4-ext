@@ -11,6 +11,10 @@
                 "command": {
                     "type": "string"
                 },
+                "sort_order": {
+                    "description": "Optional sort order used when rendering actions in Composer.",
+                    "type": "number"
+                },
                 "params": {
                     "type": "array",
                     "items": [

@@ -10,7 +10,7 @@ param(
     [string]$VersionBump = "patch"
 )
 
-Write-Host "🚀 Starting VSCode Control4 Extension Release Process..." -ForegroundColor Green
+Write-Host "Starting VSCode Control4 Extension Release Process..." -ForegroundColor Green
 
 # Function to check if git is available
 function Test-GitAvailable {
@@ -27,11 +27,11 @@ function Test-GitAvailable {
 function Test-GitStatus {
     $status = git status --porcelain
     if ($status) {
-        Write-Host "📝 Found uncommitted changes:" -ForegroundColor Yellow
+        Write-Host "Found uncommitted changes:" -ForegroundColor Yellow
         Write-Host $status -ForegroundColor Gray
         return $true
     } else {
-        Write-Host "✅ No uncommitted changes found" -ForegroundColor Green
+        Write-Host "No uncommitted changes found" -ForegroundColor Green
         return $false
     }
 }
@@ -46,7 +46,7 @@ function Get-CurrentVersion {
 function Update-Version {
     param([string]$BumpType)
     
-    Write-Host "📦 Bumping version ($BumpType)..." -ForegroundColor Yellow
+    Write-Host "Bumping version ($BumpType)..." -ForegroundColor Yellow
     
     # Read current version
     $packageJson = Get-Content "package.json" | ConvertFrom-Json
@@ -75,7 +75,7 @@ function Update-Version {
     }
     
     $newVersion = "$major.$minor.$patch"
-    Write-Host "🔄 Version: $currentVersion → $newVersion" -ForegroundColor Cyan
+    Write-Host "Version: $currentVersion -> $newVersion" -ForegroundColor Cyan
     
     # Update package.json
     $packageJson.version = $newVersion
@@ -88,32 +88,33 @@ function Update-Version {
 function Build-VSIX {
     param([string]$Version)
     
-    Write-Host "🔨 Building VSIX file..." -ForegroundColor Yellow
+    Write-Host "Building VSIX file..." -ForegroundColor Yellow
     
     # Build the extension first
-    Write-Host "📦 Building extension..." -ForegroundColor Gray
+    Write-Host "Building extension..." -ForegroundColor Gray
     npm run build
     
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "❌ Build failed!" -ForegroundColor Red
+        Write-Host "Build failed!" -ForegroundColor Red
         exit 1
     }
     
     # Build VSIX
-    Write-Host "📦 Creating VSIX package..." -ForegroundColor Gray
+    Write-Host "Creating VSIX package..." -ForegroundColor Gray
     vsce package
     
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "❌ VSIX creation failed!" -ForegroundColor Red
+        Write-Host "VSIX creation failed!" -ForegroundColor Red
         exit 1
     }
     
     $vsixFile = "vscode-control4-$Version.vsix"
     if (Test-Path $vsixFile) {
         $fileSize = (Get-Item $vsixFile).Length / 1MB
-        Write-Host "✅ VSIX created successfully: $vsixFile ($([math]::Round($fileSize, 2)) MB)" -ForegroundColor Green
+        $fileSizeRounded = [math]::Round($fileSize, 2)
+        Write-Host ("VSIX created successfully: {0} ({1} MB)" -f $vsixFile, $fileSizeRounded) -ForegroundColor Green
     } else {
-        Write-Host "❌ VSIX file not found!" -ForegroundColor Red
+        Write-Host "VSIX file not found!" -ForegroundColor Red
         exit 1
     }
 }
@@ -122,7 +123,7 @@ function Build-VSIX {
 try {
     # Check if git is available
     if (-not (Test-GitAvailable)) {
-        Write-Host "❌ Git is not available. Please install Git and try again." -ForegroundColor Red
+        Write-Host "Git is not available. Please install Git and try again." -ForegroundColor Red
         exit 1
     }
     
@@ -133,27 +134,27 @@ try {
     if (-not $CommitMessage -and $hasChanges) {
         $CommitMessage = Read-Host "Enter commit message"
         if (-not $CommitMessage) {
-            Write-Host "❌ Commit message is required when there are changes." -ForegroundColor Red
+            Write-Host "Commit message is required when there are changes." -ForegroundColor Red
             exit 1
         }
     }
     
     # Commit changes if any
     if ($hasChanges) {
-        Write-Host "💾 Committing changes..." -ForegroundColor Yellow
+        Write-Host "Committing changes..." -ForegroundColor Yellow
         git add .
         git commit -m $CommitMessage
         
         if ($LASTEXITCODE -ne 0) {
-            Write-Host "❌ Commit failed!" -ForegroundColor Red
+            Write-Host "Commit failed!" -ForegroundColor Red
             exit 1
         }
-        Write-Host "✅ Changes committed successfully" -ForegroundColor Green
+        Write-Host "Changes committed successfully" -ForegroundColor Green
     }
     
     # Get current version
     $currentVersion = Get-CurrentVersion
-    Write-Host "📋 Current version: $currentVersion" -ForegroundColor Cyan
+    Write-Host "Current version: $currentVersion" -ForegroundColor Cyan
     
     # Bump version
     $newVersion = Update-Version -BumpType $VersionBump
@@ -162,23 +163,23 @@ try {
     Build-VSIX -Version $newVersion
     
     # Commit version bump
-    Write-Host "💾 Committing version bump..." -ForegroundColor Yellow
+    Write-Host "Committing version bump..." -ForegroundColor Yellow
     git add package.json
     git commit -m "Bump version to $newVersion"
     
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "❌ Version bump commit failed!" -ForegroundColor Red
+        Write-Host "Version bump commit failed!" -ForegroundColor Red
         exit 1
     }
     
-    Write-Host "✅ Version bump committed successfully" -ForegroundColor Green
+    Write-Host "Version bump committed successfully" -ForegroundColor Green
     
     # Success message
-    Write-Host "🎉 Release process completed successfully!" -ForegroundColor Green
-    Write-Host "📦 VSIX file: vscode-control4-$newVersion.vsix" -ForegroundColor Cyan
-    Write-Host "📝 Version: $newVersion" -ForegroundColor Cyan
+    Write-Host "Release process completed successfully!" -ForegroundColor Green
+    Write-Host "VSIX file: vscode-control4-$newVersion.vsix" -ForegroundColor Cyan
+    Write-Host "Version: $newVersion" -ForegroundColor Cyan
     
 } catch {
-    Write-Host "❌ An error occurred: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "An error occurred: $($_.Exception.Message)" -ForegroundColor Red
     exit 1
 } 

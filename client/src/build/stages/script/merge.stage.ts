@@ -233,27 +233,44 @@ export default class MergeStage extends BuildStage {
                 return `Generated squishy: ${squishyFile} with ${allModules.size} modules`;
 
             } else {
-                let r = new RegExp(/require\s*?[\[\[]*?['"(]+(.+)['"]+\)/, "gm");
+                // Match Lua require forms used in Control4 drivers (OpenSSL build path).
+                // The old regex only matched require("m") with a closing ")" and missed require "m".
+                const moduleNames: string[] = [];
+                const seen = new Set<string>();
+                const add = (name: string) => {
+                    const n = name?.trim();
+                    if (n && !seen.has(n)) {
+                        seen.add(n);
+                        moduleNames.push(n);
+                    }
+                };
+                for (const m of srcDocument.matchAll(/^\s*?require\s+([('"])([^'")]+)\1/gm)) {
+                    add(m[2]);
+                }
+                for (const m of srcDocument.matchAll(/require\s*\(\s*(["'])([^"'\\]+)\1\s*\)/gm)) {
+                    add(m[2]);
+                }
 
-                let matches = srcDocument.matchAll(r);
                 let modules = "";
-                // Create module data for each require statement
-                for (const match of matches) {
+                let inlined = 0;
+                for (const mod of moduleNames) {
                     let fileDocument = await ReadFileContents(
-                        path.join(_source, ...match[1].split(".")) + ".lua"
+                        path.join(_source, ...mod.split(".")) + ".lua"
                     );
 
                     // Check to make sure the library exists, if not don't include it.
                     // This could be caused by a package using its own require statements in which case it should handle the package preload.
                     if (fileDocument) {
+                        inlined++;
                         modules =
                             modules +
-                            `package.preload['${match[1]}'] = (function(...)\n  local fn = load([[\n\n${fileDocument}\n\n]])\n\n  return fn()\nend)()\n`;
+                            `package.preload['${mod}'] = (function(...)\n  local fn = load([[\n\n${fileDocument}\n\n]])\n\n  return fn()\nend)()\n`;
                     }
                 }
 
                 srcDocument = modules + srcDocument;
                 await WriteFileContents(srcFile, srcDocument);
+                return `Inlined ${inlined} module(s) into driver.lua (${moduleNames.length} require(s) seen)`;
             }
         } catch (error) {
             console.error(`[MergeStage] Error reading source file:`, error);
