@@ -134,11 +134,33 @@ export default class Manifest {
             if (configuration.get<string>('buildMethod') == "OpenSSL") {
 
             } else {
+                if (this.merge) {
+                    const squishyPath = path.join(intermediate, 'squishy');
+                    try {
+                        await fsPromises.access(squishyPath, fs.constants.F_OK);
+                    } catch {
+                        reject(
+                            new Error(
+                                'Missing "squishy" recipe for Lua merge. DriverPackager needs this file next to driver.lua in the intermediate folder.\n\n' +
+                                    'The Merge stage normally writes it after resolving every require() in driver.lua (and nested modules). ' +
+                                    'If you only see a DriverPackager "cannot open ./squishy" error, scroll the Debug Console for [MergeStage] — you should see ' +
+                                    '"Failed to find required module …" when a require does not map to a .lua file under src (common with runtime-only libs such as http.request).\n\n' +
+                                    `Expected: ${squishyPath}`
+                            )
+                        );
+                        return;
+                    }
+                }
                 // Attempt to build the driver using driver packager
-                cp.execFile(path.basename(packager), ["-v", intermediate, destination, 'manifest.xml'], { shell: false, cwd: path.dirname(packager), timeout: 3000 }, (err, stdout, stderr) => {
+                cp.execFile(path.basename(packager), ["-v", intermediate, destination, 'manifest.xml'], { shell: false, cwd: path.dirname(packager) }, (err, stdout, stderr) => {
                     if (err) {
-                        vscode.window.showErrorMessage(stderr ? stderr : stdout);
-                        reject(false)
+                        const packagerText = String(stderr || stdout || '').trim();
+                        const execDetail = err instanceof Error ? err.message : String(err);
+                        const message = packagerText
+                            ? `DriverPackager failed: ${execDetail}\n${packagerText}`
+                            : `DriverPackager failed: ${execDetail}`;
+                        vscode.window.showErrorMessage(message);
+                        reject(new Error(message));
                     } else {
                         vscode.window.showInformationMessage(`"${this.driverName}.c4z" built at ${new Date().toLocaleTimeString()}`, { modal: false }, "Open .c4z", "Open driver.xml", "Ok").then(selection => {
                             if (selection === "Open .c4z") {

@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { BuildStage } from '../../builder';
@@ -6,6 +7,8 @@ import {
     WriteFileContents,
     FileExists,
 } from "../../../utility";
+
+const fsPromises = fs.promises;
 
 export default class MergeStage extends BuildStage {
     static r = new RegExp(/require\s*?[\[\[]*?['"(]+(.+)['"]+\)/, "gm");
@@ -69,7 +72,11 @@ export default class MergeStage extends BuildStage {
         try {
             const filePath = await this.FindModule(source, module);
             if (!filePath) {
-                throw new Error(`[MergeStage] Required module "${module}" was not found in source tree`);
+                const expected = path.join(source, ...module.split('.')) + '.lua';
+                throw new Error(
+                    `Failed to find required module "${module}". No file at "${expected}" (or parent-folder fallback). ` +
+                    `Every require used while merge/squish is enabled must resolve to a .lua file under src.`
+                );
             }
 
             let fileDocument = await ReadFileContents(filePath);
@@ -86,7 +93,11 @@ export default class MergeStage extends BuildStage {
             for (const nestedModuleName of nestedModuleNames) {
                 const nestedModulePath = await this.FindModule(source, nestedModuleName);
                 if (!nestedModulePath) {
-                    throw new Error(`[MergeStage] Required nested module "${nestedModuleName}" (from "${module}") was not found in source tree`);
+                    const expected = path.join(source, ...nestedModuleName.split('.')) + '.lua';
+                    throw new Error(
+                        `Failed to find required module "${nestedModuleName}" (imported from "${module}"). ` +
+                        `No file at "${expected}". Runtime-only modules (e.g. http.request) cannot be merged—remove them or load them differently.`
+                    );
                 }
 
                 let nested = await this.GetModules(source, nestedModuleName);
@@ -217,13 +228,10 @@ export default class MergeStage extends BuildStage {
                 squishes.push(`Output "driver.lua.squished"`);
                 let squishyDocument = squishes.join("\r\n");
                 
-                try {
-                    await WriteFileContents(squishyFile, squishyDocument);
-                    console.log(`[MergeStage] Successfully wrote squishy file to: ${squishyFile}`);
-                } catch (error) {
-                    console.error(`[MergeStage] Failed to write squishy file:`, error);
-                    throw new Error(`Failed to generate squishy file: ${error.message}`);
-                }
+                // WriteFileContents swallows errors; a missing squishy surfaces only as a cryptic DriverPackager failure.
+                await fsPromises.mkdir(path.dirname(squishyFile), { recursive: true });
+                await fsPromises.writeFile(squishyFile, squishyDocument, 'utf8');
+                console.log(`[MergeStage] Successfully wrote squishy file to: ${squishyFile}`);
                 
                 console.log(`[MergeStage] Generated squishy file content:`);
                 console.log(squishyDocument);
@@ -271,8 +279,9 @@ export default class MergeStage extends BuildStage {
                 return `Inlined ${inlined} module(s) into driver.lua (${moduleNames.length} require(s) seen)`;
             }
         } catch (error) {
-            console.error(`[MergeStage] Error reading source file:`, error);
-            throw new Error(`Failed to read source file ${srcFile}: ${error.message}`);
+            console.error(`[MergeStage] Merge Execute failed:`, error);
+            // Do not wrap: preserves "Failed to find required module …" for notifications and logs.
+            throw error instanceof Error ? error : new Error(String(error));
         }
     }
 
